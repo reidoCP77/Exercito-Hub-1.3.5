@@ -1,0 +1,3 @@
+{dispositivo} - {nickname} - cb
+   {classificacao_patente} - p
+   {classificacao_divisao} - p-1
