@@ -1,26 +1,37 @@
 import tkinter as tk
+import time as t
 patentes = ["rec", "sld", "cb", "tsgt"]
 player1 = patentes[2]
 player2 = patentes[3]
-# fnc1's
+# fnc1's (1010)
 def verifyp():
   if player1 == patentes[3]:
-    mov_port = True;
+    mov_port(1)
   else:
     mov_port(0)
   if player2 == patentes[3]:
     mov_port(1)
   else:
-    mov_port = False;
+    mov_port(0)
 def mov_port(n):
   if n == 0:
-    
+    anm = True
+  if n == 1:
+    anm = False
 # -------------
 x1 = 50
 y1 = 50
 x2 = 250
 y2 = 250-100
 # -----------
+while anm == True:
+  t.sleep(0.01)
+  x1 -= 0.1
+  x2 -= 0.1
+  y1 -= 0.1
+  y2 -= 0.1
+  if y2 < 100:
+    anm = False
 root = tk.Tk()
 root.title("Portão mov, anim")
 root.geometry("500x500")  # Set window size to 500x500 pixels
