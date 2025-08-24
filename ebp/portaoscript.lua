@@ -1,12 +1,12 @@
 local button = script.Parent
-local peca = workspace:WaitForChild("coloque o nome da peça")
+local peca = workspace:WaitForChild("coloque o nome da peça (portão)")
 
 local TIMES_PERMITIDOS = {
-    "Administradores",
-    "Policia", 
-    "Seguranca",
-    "VIP",
-    "Moderadores"
+    "[G] Graduados",
+    "[BAC] Batalhão de Ações de Comandos", 
+    "[CIE] Centro de Inteligência do Exército",
+    "[BFE] Batalhão de Forças Especiais",
+    "[BPE] Batalhão da Polícia do Exército"
 }
 
 local DISTANCIA_DESCIDA = 10
