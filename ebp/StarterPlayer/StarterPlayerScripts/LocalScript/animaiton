@@ -1,0 +1,70 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+player.CharacterAdded:Connect(function(char)
+	local humanoid = char:WaitForChild("Humanoid")
+
+	local oldAnimate = char:FindFirstChild("Animate")
+	if oldAnimate then
+		oldAnimate:Destroy()
+	end
+
+	local function loadAnim(animId)
+		local anim = Instance.new("Animation")
+		anim.AnimationId = "rbxassetid://" .. animId
+		return humanoid:LoadAnimation(anim)
+	end
+
+	local idle1 = loadAnim(180435571)
+	local idle2 = loadAnim(180435792)
+	local walk = loadAnim(180426354)
+	local jump = loadAnim(125750702)
+	local fall = loadAnim(180436148)
+
+	humanoid.Running:Connect(function(speed)
+		if speed > 0 then
+			if not walk.IsPlaying then
+				idle1:Stop()
+				idle2:Stop()
+				walk:Play()
+			end
+		else
+			if walk.IsPlaying then
+				walk:Stop()
+			end
+			if not idle1.IsPlaying and not idle2.IsPlaying then
+				if math.random(1,2) == 1 then
+					idle1:Play()
+				else
+					idle2:Play()
+				end
+			end
+		end
+	end)
+
+	humanoid.Jumping:Connect(function(active)
+		if active then
+			if not jump.IsPlaying then
+				walk:Stop()
+				idle1:Stop()
+				idle2:Stop()
+				jump:Play()
+			end
+		end
+	end)
+
+	humanoid.FreeFalling:Connect(function(active)
+		if active then
+			if not fall.IsPlaying then
+				walk:Stop()
+				idle1:Stop()
+				idle2:Stop()
+				fall:Play()
+			end
+		else
+			if fall.IsPlaying then
+				fall:Stop()
+			end
+		end
+	end)
+end)
