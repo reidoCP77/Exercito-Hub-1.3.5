@@ -1,0 +1,16 @@
+Players.PlayerAdded:Connect(function(player)
+    player:SetAttribute("Mobile", false)
+    player:SetAttribute("Console", false)
+    player:SetAttribute("VR", false)
+    player:SetAttribute("Rank", "N/A")
+
+    player.CharacterAdded:Connect(function(character)
+        wait(1)
+        createNameTag(player)
+    end)
+    player:GetPropertyChangedSignal("Team"):Connect(function()
+        if player.Character then
+            createNameTag(player)
+        end
+    end)
+end)
