@@ -14,13 +14,13 @@ end
 
 local function getDeviceEmoji(device)
     if device == "Mobile" then
-        return "📱" -- Emoji para Mobile
+        return "📱"
     elseif device == "Console" then
-        return "🎮" -- Emoji para Console
+        return "🎮"
     elseif device == "VR" then
-        return "🕶️" -- Emoji para VR
+        return "🕶️"
     else
-        return "💻" -- Emoji para Desktop
+        return "💻"
     end
 end
 
@@ -33,7 +33,7 @@ local function createNameTag(player)
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "PlayerNameTag"
     billboard.Adornee = humanoidRootPart
-    billboard.Size = UDim2.new(0, 200, 0, 120) -- Aumenta a altura para acomodar mais texto
+    billboard.Size = UDim2.new(0, 120, 0, 120)
     billboard.StudsOffset = Vector3.new(0, 3.5, 0)
     billboard.AlwaysOnTop = true
     billboard.MaxDistance = 50
@@ -48,34 +48,34 @@ local function createNameTag(player)
 
     local line1 = Instance.new("TextLabel")
     line1.Size = UDim2.new(1, 0, 0.3, 0)
-    line1.Position = UDim2.new(0, 0, 0, 0)
-    line1.Text = string.format("%s %s", deviceEmoji, player.Name) -- Adiciona emoji e nome
+    line1.Position = UDim2.new(0, 0, 0, 5)
+    line1.Text = string.format("%s  - %s", deviceEmoji, player.Name)
     line1.TextColor3 = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
     line1.BackgroundTransparency = 1
     line1.TextScaled = true
     line1.Font = Enum.Font.SourceSansBold
     line1.Parent = frame
 
-    local rank = player:GetAttribute("Rank") or "N/A" -- Obtém a patente do jogador
+    local teamName = player.Team and player.Team.Name or "N/A"
     local line2 = Instance.new("TextLabel")
-    line2.Size = UDim2.new(1, 0, 0.3, 0)
-    line2.Position = UDim2.new(0, 0, 0.3, 0)
-    line2.Text = string.format("Patente: %s", rank) -- Exibe a patente
+    line2.Size = UDim2.new(1, 0, 0.15, 0)
+    line2.Position = UDim2.new(0, 0, 0.2, 6) -- Team agora no meio
+    line2.Text = string.format(teamName)
     line2.TextColor3 = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
     line2.BackgroundTransparency = 1
     line2.TextScaled = true
-    line2.Font = Enum.Font.SourceSans
+    line2.Font = Enum.Font.SourceSansBold 
     line2.Parent = frame
 
-    local teamName = player.Team and player.Team.Name or "N/A" -- Obtém o nome do time
+    local rank = player:GetAttribute("Rank") or "N/A"
     local line3 = Instance.new("TextLabel")
-    line3.Size = UDim2.new(1, 0, 0.4, 0)
-    line3.Position = UDim2.new(0, 0, 0.6, 0)
-    line3.Text = string.format("Time: %s", teamName) -- Exibe o nome do time
+    line3.Size = UDim2.new(1, 0, 0.15, 0)
+    line3.Position = UDim2.new(0, 0, 0.6, -25) -- Rank agora embaixo
+    line3.Text = string.format(rank)
     line3.TextColor3 = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
     line3.BackgroundTransparency = 1
     line3.TextScaled = true
-    line3.Font = Enum.Font.SourceSans
+    line3.Font = Enum.Font.SourceSansBold
     line3.Parent = frame
 
     return billboard
