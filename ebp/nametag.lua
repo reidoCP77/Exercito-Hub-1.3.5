@@ -1,4 +1,20 @@
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+local function detectDevice(player)
+    local device = "Desktop"
+    local lastInput = UserInputService:GetLastInputType()
+    if lastInput == Enum.UserInputType.Touch then
+        device = "Mobile"
+    elseif lastInput == Enum.UserInputType.Gamepad1 then
+        device = "Console"
+    elseif lastInput == Enum.UserInputType.VR then
+        device = "VR"
+    end
+    player:SetAttribute("Mobile", device == "Mobile")
+    player:SetAttribute("Console", device == "Console")
+    player:SetAttribute("VR", device == "VR")
+end
 
 local function getPlayerDevice(player)
     local device = "Desktop"
@@ -34,7 +50,7 @@ local function createNameTag(player)
     billboard.Name = "PlayerNameTag"
     billboard.Adornee = humanoidRootPart
     billboard.Size = UDim2.new(0, 120, 0, 120)
-    billboard.StudsOffset = Vector3.new(0, 2.5, 0) -- Ajusta a altura para mais próxima da cabeça
+    billboard.StudsOffset = Vector3.new(0, 2.5, 0)
     billboard.AlwaysOnTop = true
     billboard.MaxDistance = 50
     billboard.Parent = character
@@ -59,7 +75,7 @@ local function createNameTag(player)
     local teamName = player.Team and player.Team.Name or "N/A"
     local line2 = Instance.new("TextLabel")
     line2.Size = UDim2.new(1, 0, 0.15, 0)
-    line2.Position = UDim2.new(0, 0, 0.2, 6) -- Posição do nome do time
+    line2.Position = UDim2.new(0, 0, 0.2, 6)
     line2.Text = string.format(teamName)
     line2.TextColor3 = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
     line2.BackgroundTransparency = 1
@@ -70,7 +86,7 @@ local function createNameTag(player)
     local rank = player:GetAttribute("Rank") or "N/A"
     local line3 = Instance.new("TextLabel")
     line3.Size = UDim2.new(1, 0, 0.15, 0)
-    line3.Position = UDim2.new(0, 0, 0.6, -25) -- Posição da patente
+    line3.Position = UDim2.new(0, 0, 0.6, -25)
     line3.Text = string.format(rank)
     line3.TextColor3 = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
     line3.BackgroundTransparency = 1
@@ -82,6 +98,8 @@ local function createNameTag(player)
 end
 
 Players.PlayerAdded:Connect(function(player)
+    detectDevice(player)
+    player:SetAttribute("Rank", "N/A")
     player.CharacterAdded:Connect(function(character)
         wait(1)
         createNameTag(player)
@@ -94,6 +112,7 @@ Players.PlayerAdded:Connect(function(player)
 end)
 
 for _, player in ipairs(Players:GetPlayers()) do
+    detectDevice(player)
     if player.Character then
         createNameTag(player)
     end
