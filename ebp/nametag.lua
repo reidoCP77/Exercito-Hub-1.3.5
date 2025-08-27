@@ -34,7 +34,7 @@ local function createNameTag(player)
     billboard.Name = "PlayerNameTag"
     billboard.Adornee = humanoidRootPart
     billboard.Size = UDim2.new(0, 120, 0, 120)
-    billboard.StudsOffset = Vector3.new(0, 3.5, 0)
+    billboard.StudsOffset = Vector3.new(0, 2.5, 0) -- Ajusta a altura para mais próxima da cabeça
     billboard.AlwaysOnTop = true
     billboard.MaxDistance = 50
     billboard.Parent = character
@@ -59,7 +59,7 @@ local function createNameTag(player)
     local teamName = player.Team and player.Team.Name or "N/A"
     local line2 = Instance.new("TextLabel")
     line2.Size = UDim2.new(1, 0, 0.15, 0)
-    line2.Position = UDim2.new(0, 0, 0.2, 6) -- Team agora no meio
+    line2.Position = UDim2.new(0, 0, 0.2, 6) -- Posição do nome do time
     line2.Text = string.format(teamName)
     line2.TextColor3 = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
     line2.BackgroundTransparency = 1
@@ -70,7 +70,7 @@ local function createNameTag(player)
     local rank = player:GetAttribute("Rank") or "N/A"
     local line3 = Instance.new("TextLabel")
     line3.Size = UDim2.new(1, 0, 0.15, 0)
-    line3.Position = UDim2.new(0, 0, 0.6, -25) -- Rank agora embaixo
+    line3.Position = UDim2.new(0, 0, 0.6, -25) -- Posição da patente
     line3.Text = string.format(rank)
     line3.TextColor3 = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
     line3.BackgroundTransparency = 1
