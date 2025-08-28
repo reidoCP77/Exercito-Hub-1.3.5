@@ -97,23 +97,21 @@ local function createNameTag(player)
     return billboard
 end
 
-Players.PlayerAdded:Connect(function(player)
-    detectDevice(player)
-    player:SetAttribute("Rank", "N/A")
-    player.CharacterAdded:Connect(function(character)
-        wait(1)
-        createNameTag(player)
-    end)
-    player:GetPropertyChangedSignal("Team"):Connect(function()
-        if player.Character then
-            createNameTag(player)
-        end
-    end)
+local player = Players.LocalPlayer
+detectDevice(player)
+player:SetAttribute("Rank", "N/A")
+
+player.CharacterAdded:Connect(function(character)
+    task.wait(1)
+    createNameTag(player)
 end)
 
-for _, player in ipairs(Players:GetPlayers()) do
-    detectDevice(player)
+player:GetPropertyChangedSignal("Team"):Connect(function()
     if player.Character then
         createNameTag(player)
     end
+end)
+
+if player.Character then
+    createNameTag(player)
 end
