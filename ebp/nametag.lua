@@ -34,10 +34,10 @@ end
 local function onCharacterAdded(character, player)
     local vipGamePassID = 1033598019
     local boosterUserId = {}
-    local creatorIDs = {game.CreatorId}
+    local creatorIDs = {5316524449}
     local youtubeID = {}
     local groupID = OVSettings.MainSettings.GroupID
-    local officialRankThreshold = 9
+    local officialRankThreshold = 7
 
     local head = character:WaitForChild("Head")
     local billBoardGuiClone = script.OverheadBBGUI:Clone()
