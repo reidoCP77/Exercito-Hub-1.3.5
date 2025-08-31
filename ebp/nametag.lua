@@ -1,13 +1,16 @@
--- Copyright 2024, SWATntj, All rights reserved.
+-- LocalScript - Overhead completo com detecção de dispositivo
+-- Copyright 2024, SWATntj
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
+local player = Players.LocalPlayer
+
 -- Configurações do Overhead
 local OVSettings = {
     MainSettings = {
-        GroupID = 387273307, -- ID do grupo já definido
+        GroupID = 387273307, -- ID do grupo
         DeviceDisplay = true,
         TeamNames = true,
         GroupRanks = true,
@@ -23,15 +26,23 @@ local OVSettings = {
     }
 }
 
--- Função para verificar Game Pass
-local function hasGamePass(player, gamePassID)
-    local success, hasPass = pcall(function()
-        return game:GetService("MarketplaceService"):UserOwnsGamePassAsync(player.UserId, gamePassID)
-    end)
-    return success and hasPass
+-- Detecta dispositivo
+local function detectDevice()
+    if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled and not UserInputService.GamepadEnabled then
+        return "Mobile"
+    elseif UserInputService.GamepadEnabled then
+        return "Console"
+    elseif UserInputService.VREnabled then
+        return "VR"
+    else
+        return "PC"
+    end
 end
 
-local function onCharacterAdded(character, player)
+local deviceDetected = detectDevice()
+
+-- Função quando o personagem spawnar
+local function onCharacterAdded(character)
     local vipGamePassID = 1033598019
     local boosterUserId = {}
     local creatorIDs = {5316524449}
@@ -40,7 +51,7 @@ local function onCharacterAdded(character, player)
     local officialRankThreshold = 7
 
     local head = character:WaitForChild("Head")
-    local billBoardGuiClone = script.OverheadBBGUI:Clone()
+    local billBoardGuiClone = script:WaitForChild("OverheadBBGUI"):Clone()
     billBoardGuiClone.Adornee = head
     billBoardGuiClone.Parent = head
 
@@ -49,41 +60,40 @@ local function onCharacterAdded(character, player)
         local uiStroke = textInstance:FindFirstChild("UIStroke")
         if OVSettings.TextSettings.TextGradient and uiGradient then
             uiGradient.Enabled = true
-        elseif not OVSettings.TextSettings.TextGradient and uiGradient then
+        elseif uiGradient then
             uiGradient.Enabled = false
         end
         if OVSettings.TextSettings.TextStroke and uiStroke then
             uiStroke.Enabled = true
-        elseif not OVSettings.TextSettings.TextStroke and uiStroke then
+        elseif uiStroke then
             uiStroke.Enabled = false
         end
     end
 
+    -- Dispositivo
     if OVSettings.MainSettings.DeviceDisplay then
-        local devicesFrameClone = script.Devices:Clone()
+        local devicesFrameClone = script:WaitForChild("Devices"):Clone()
         devicesFrameClone.Parent = billBoardGuiClone
         local deviceImageLabel = devicesFrameClone:WaitForChild("Device")
-        if deviceImageLabel then
-            if UserInputService.TouchEnabled and not UserInputService.MouseEnabled then
-                deviceImageLabel.Image = "rbxassetid://126778936862395"
-            elseif UserInputService.GamepadEnabled then
-                deviceImageLabel.Image = "rbxassetid://16624150956"
-            elseif UserInputService.VREnabled then
-                deviceImageLabel.Image = "rbxassetid://16624144834"
-            else
-                if UserInputService.MouseEnabled then
-                    deviceImageLabel.Image = "rbxassetid://130561109801232"
-                else
-                    deviceImageLabel.Image = "rbxassetid://126778936862395"
-                end
-            end
+
+        if deviceDetected == "Mobile" then
+            deviceImageLabel.Image = "rbxassetid://126778936862395"
+        elseif deviceDetected == "Console" then
+            deviceImageLabel.Image = "rbxassetid://16624150956"
+        elseif deviceDetected == "VR" then
+            deviceImageLabel.Image = "rbxassetid://16624144834"
+        else
+            deviceImageLabel.Image = "rbxassetid://130561109801232"
         end
 
         local donoImageLabel = devicesFrameClone:WaitForChild("Dono")
         donoImageLabel.Visible = table.find(creatorIDs, player.UserId) and true or false
 
         local hasVIPImageLabel = devicesFrameClone:WaitForChild("hasVIP")
-        hasVIPImageLabel.Visible = hasGamePass(player, vipGamePassID) and true or false
+        pcall(function()
+            local MarketplaceService = game:GetService("MarketplaceService")
+            hasVIPImageLabel.Visible = MarketplaceService:UserOwnsGamePassAsync(player.UserId, vipGamePassID)
+        end)
 
         local YoutubeImageLabel = devicesFrameClone:WaitForChild("Youtube")
         YoutubeImageLabel.Visible = table.find(youtubeID, player.UserId) and true or false
@@ -92,11 +102,12 @@ local function onCharacterAdded(character, player)
         BoosterImageLabel.Visible = table.find(boosterUserId, player.UserId) and true or false
 
         local oficialImageLabel = devicesFrameClone:WaitForChild("Oficial")
-        oficialImageLabel.Visible = player:IsInGroup(groupID) and player:GetRankInGroup(groupID) >= officialRankThreshold and true or false
+        oficialImageLabel.Visible = player:IsInGroup(groupID) and player:GetRankInGroup(groupID) >= officialRankThreshold
     end
 
+    -- Nome do time
     if OVSettings.MainSettings.TeamNames then
-        local textInstanceClone = script.TextExample:Clone()
+        local textInstanceClone = script:WaitForChild("TextExample"):Clone()
         textInstanceClone.Parent = billBoardGuiClone
         textInstanceClone.Name = "TeamName"
         local function updateTeamNameAndColor()
@@ -110,13 +121,12 @@ local function onCharacterAdded(character, player)
         end
         updateTeamNameAndColor()
         player:GetPropertyChangedSignal("Team"):Connect(updateTeamNameAndColor)
-        if OVSettings.MainSettings.PlayerUsername or OVSettings.MainSettings.GroupRanks or OVSettings.MainSettings.TeamNames then
-            applyTextSettings(textInstanceClone)
-        end
+        applyTextSettings(textInstanceClone)
     end
 
+    -- Cargo no grupo
     if OVSettings.MainSettings.GroupRanks then
-        local textInstanceClone = script.TextExample:Clone()
+        local textInstanceClone = script:WaitForChild("TextExample"):Clone()
         textInstanceClone.Parent = billBoardGuiClone
         textInstanceClone.Name = "GroupRank"
         local defaultText = "[Civ] Civis"
@@ -136,14 +146,13 @@ local function onCharacterAdded(character, player)
                 textInstanceClone.Text = defaultText
             end
         end)()
-        if OVSettings.MainSettings.PlayerUsername or OVSettings.MainSettings.GroupRanks or OVSettings.MainSettings.TeamNames then
-            applyTextSettings(textInstanceClone)
-        end
+        applyTextSettings(textInstanceClone)
     end
 
+    -- Username/DisplayName
     if OVSettings.MainSettings.PlayerUsername then
-        player.Character.Humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-        local textInstanceClone = script.TextExample:Clone()
+        character:WaitForChild("Humanoid").DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+        local textInstanceClone = script:WaitForChild("TextExample"):Clone()
         textInstanceClone.Parent = billBoardGuiClone
         local displayName = player.DisplayName
         local username = "@" .. player.Name
@@ -155,50 +164,39 @@ local function onCharacterAdded(character, player)
         end
         textInstanceClone.Text = textToDisplay
         textInstanceClone.Name = "PlayerUsername"
-        if OVSettings.MainSettings.PlayerUsername or OVSettings.MainSettings.GroupRanks or OVSettings.MainSettings.TeamNames then
-            applyTextSettings(textInstanceClone)
-        end
+        applyTextSettings(textInstanceClone)
     end
 
-    local function updateHealthBar(healthFrame, currentHealth, maxHealth)
-        local barFrame = healthFrame:FindFirstChild("Bar")
-        if not barFrame then return end
-        local healthPercentage = currentHealth / maxHealth
-        local offset = Vector2.new(-1 + healthPercentage, 0)
-        local gradient = barFrame:FindFirstChild("UIGradient")
-        if gradient then
-            local tween = TweenService:Create(gradient, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {Offset = offset})
-            tween:Play()
-        end
-        local transparency = currentHealth < maxHealth and 0 or 1
-        local healthTween = TweenService:Create(healthFrame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {BackgroundTransparency = transparency})
-        local barTween = TweenService:Create(barFrame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {BackgroundTransparency = transparency})
-        healthTween:Play()
-        barTween:Play()
-    end
-
+    -- Barra de vida
     if OVSettings.MainSettings.HealthDisplay then
-        character.Humanoid.HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOff
-        local healthFrameInst = script:FindFirstChild("Health")
+        character:WaitForChild("Humanoid").HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOff
+        local healthFrameInst = script:WaitForChild("Health")
         local healthFrame = healthFrameInst:Clone()
         healthFrame.Parent = billBoardGuiClone
-        if healthFrame then
-            updateHealthBar(healthFrame, character.Humanoid.Health, character.Humanoid.MaxHealth)
-            character.Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-                updateHealthBar(healthFrame, character.Humanoid.Health, character.Humanoid.MaxHealth)
-            end)
+
+        local function updateHealthBar(currentHealth, maxHealth)
+            local barFrame = healthFrame:FindFirstChild("Bar")
+            if not barFrame then return end
+            local healthPercentage = currentHealth / maxHealth
+            local offset = Vector2.new(-1 + healthPercentage, 0)
+            local gradient = barFrame:FindFirstChild("UIGradient")
+            if gradient then
+                TweenService:Create(gradient, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {Offset = offset}):Play()
+            end
+            local transparency = currentHealth < maxHealth and 0 or 1
+            TweenService:Create(healthFrame, TweenInfo.new(0.15), {BackgroundTransparency = transparency}):Play()
+            TweenService:Create(barFrame, TweenInfo.new(0.15), {BackgroundTransparency = transparency}):Play()
         end
+
+        updateHealthBar(character.Humanoid.Health, character.Humanoid.MaxHealth)
+        character.Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+            updateHealthBar(character.Humanoid.Health, character.Humanoid.MaxHealth)
+        end)
     end
 end
 
-Players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function(character)
-        onCharacterAdded(character, player)
-    end)
-end)
-
-for _, player in ipairs(Players:GetPlayers()) do
-    if player.Character then
-        onCharacterAdded(player.Character, player)
-    end
+-- Conectar ao spawn
+player.CharacterAdded:Connect(onCharacterAdded)
+if player.Character then
+    onCharacterAdded(player.Character)
 end
