@@ -1,133 +1,57 @@
--- cmt1
+-- Copyright 2024, SWATntj, All rights reserved.
+
 local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
-local GrupoID = 387273307 -- ID do grupo
+-- Configurações do Overhead
+local OVSettings = {
+MainSettings = {
+GroupID = 387273307, -- ID do grupo já definido
+DeviceDisplay = true,
+TeamNames = true,
+GroupRanks = true,
+PlayerUsername = true,
+Subunidade = {}, -- IDs de subunidades, se houver
+HealthDisplay = true
+},
+TextSettings = {
+TextGradient = true,
+TextStroke = true,
+DisplayName = true,
+Username = true
+}
+}
 
-local function detectDevice(player)
-    local device = "Desktop"
-    local lastInput = UserInputService:GetLastInputType()
-    if lastInput == Enum.UserInputType.Touch then
-        device = "Mobile"
-    elseif lastInput == Enum.UserInputType.Gamepad1 then
-        device = "Console"
-    elseif lastInput == Enum.UserInputType.VR then
-        device = "VR"
-    end
-    player:SetAttribute("Mobile", device == "Mobile")
-    player:SetAttribute("Console", device == "Console")
-    player:SetAttribute("VR", device == "VR")
+-- Função para verificar Game Pass
+local function hasGamePass(player, gamePassID)
+local success, hasPass = pcall(function()
+return game:GetService("MarketplaceService"):UserOwnsGamePassAsync(player.UserId, gamePassID)
+end)
+return success and hasPass
 end
 
-local function getPlayerDevice(player)
-    local device = "Desktop"
-    if player:GetAttribute("Mobile") then
-        device = "Mobile"
-    elseif player:GetAttribute("Console") then
-        device = "Console"
-    elseif player:GetAttribute("VR") then
-        device = "VR"
-    end
-    return device
+local function onCharacterAdded(character, player)
+local vipGamePassID = 1033598019
+local boosterUserId = {}
+local creatorIDs = {game.CreatorId}
+local youtubeID = {}
+local groupID = OVSettings.MainSettings.GroupID
+local officialRankThreshold = 9
+
+local head = character:WaitForChild("Head") local billBoardGuiClone = script.OverheadBBGUI:Clone() billBoardGuiClone.Adornee = head billBoardGuiClone.Parent = head local function applyTextSettings(textInstance) local uiGradient = textInstance:FindFirstChild("UIGradient") local uiStroke = textInstance:FindFirstChild("UIStroke") if OVSettings.TextSettings.TextGradient and uiGradient then uiGradient.Enabled = true elseif not OVSettings.TextSettings.TextGradient and uiGradient then uiGradient.Enabled = false end if OVSettings.TextSettings.TextStroke and uiStroke then uiStroke.Enabled = true elseif not OVSettings.TextSettings.TextStroke and uiStroke then uiStroke.Enabled = false end end if OVSettings.MainSettings.DeviceDisplay then local devicesFrameClone = script.Devices:Clone() devicesFrameClone.Parent = billBoardGuiClone local deviceImageLabel = devicesFrameClone:WaitForChild("Device") if deviceImageLabel then if UserInputService.TouchEnabled and not UserInputService.MouseEnabled then deviceImageLabel.Image = "rbxassetid://126778936862395" elseif UserInputService.GamepadEnabled then deviceImageLabel.Image = "rbxassetid://16624150956" elseif UserInputService.VREnabled then deviceImageLabel.Image = "rbxassetid://16624144834" else if UserInputService.MouseEnabled then deviceImageLabel.Image = "rbxassetid://130561109801232" else deviceImageLabel.Image = "rbxassetid://126778936862395" end end end local donoImageLabel = devicesFrameClone:WaitForChild("Dono") donoImageLabel.Visible = table.find(creatorIDs, player.UserId) and true or false local hasVIPImageLabel = devicesFrameClone:WaitForChild("hasVIP") hasVIPImageLabel.Visible = hasGamePass(player, vipGamePassID) and true or false local YoutubeImageLabel = devicesFrameClone:WaitForChild("Youtube") YoutubeImageLabel.Visible = table.find(youtubeID, player.UserId) and true or false local BoosterImageLabel = devicesFrameClone:WaitForChild("Booster") BoosterImageLabel.Visible = table.find(boosterUserId, player.UserId) and true or false local oficialImageLabel = devicesFrameClone:WaitForChild("Oficial") oficialImageLabel.Visible = player:IsInGroup(groupID) and player:GetRankInGroup(groupID) >= officialRankThreshold and true or false end if OVSettings.MainSettings.TeamNames then local textInstanceClone = script.TextExample:Clone() textInstanceClone.Parent = billBoardGuiClone textInstanceClone.Name = "TeamName" local function updateTeamNameAndColor() if player.Team then textInstanceClone.Text = player.Team.Name textInstanceClone.TextColor3 = player.Team.TeamColor.Color else textInstanceClone.Text = "Neutral" textInstanceClone.TextColor3 = Color3.fromRGB(255, 255, 255) end end updateTeamNameAndColor() player:GetPropertyChangedSignal("Team"):Connect(updateTeamNameAndColor) if OVSettings.MainSettings.PlayerUsername or OVSettings.MainSettings.GroupRanks or OVSettings.MainSettings.TeamNames then applyTextSettings(textInstanceClone) end end if OVSettings.MainSettings.GroupRanks then local textInstanceClone = script.TextExample:Clone() textInstanceClone.Parent = billBoardGuiClone textInstanceClone.Name = "GroupRank" local defaultText = "[Civ] Civis" local subunitRank = "N/A" coroutine.wrap(function() if player:IsInGroup(groupID) then local role = player:GetRoleInGroup(groupID) textInstanceClone.Text = role for _, id in ipairs(OVSettings.MainSettings.Subunidade) do if player:IsInGroup(id) then subunitRank = player:GetRoleInGroup(id) break end end textInstanceClone.Text = textInstanceClone.Text .. " | " .. subunitRank else textInstanceClone.Text = defaultText end end)() if OVSettings.MainSettings.PlayerUsername or OVSettings.MainSettings.GroupRanks or OVSettings.MainSettings.TeamNames then applyTextSettings(textInstanceClone) end end if OVSettings.MainSettings.PlayerUsername then player.Character.Humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None local textInstanceClone = script.TextExample:Clone() textInstanceClone.Parent = billBoardGuiClone local displayName = player.DisplayName local username = "@" .. player.Name local textToDisplay = displayName if OVSettings.TextSettings.DisplayName and OVSettings.TextSettings.Username then textToDisplay = string.format("%s (%s)", displayName, username) elseif OVSettings.TextSettings.Username then textToDisplay = username end textInstanceClone.Text = textToDisplay textInstanceClone.Name = "PlayerUsername" if OVSettings.MainSettings.PlayerUsername or OVSettings.MainSettings.GroupRanks or OVSettings.MainSettings.TeamNames then applyTextSettings(textInstanceClone) end end local function updateHealthBar(healthFrame, currentHealth, maxHealth) local barFrame = healthFrame:FindFirstChild("Bar") if not barFrame then return end local healthPercentage = currentHealth / maxHealth local offset = Vector2.new(-1 + healthPercentage, 0) local gradient = barFrame:FindFirstChild("UIGradient") if gradient then local tween = TweenService:Create(gradient, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {Offset = offset}) tween:Play() end local transparency = currentHealth < maxHealth and 0 or 1 local healthTween = TweenService:Create(healthFrame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {BackgroundTransparency = transparency}) local barTween = TweenService:Create(barFrame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {BackgroundTransparency = transparency}) healthTween:Play() barTween:Play() end if OVSettings.MainSettings.HealthDisplay then character.Humanoid.HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOff local healthFrameInst = script:FindFirstChild("Health") local healthFrame = healthFrameInst:Clone() healthFrame.Parent = billBoardGuiClone if healthFrame then updateHealthBar(healthFrame, character.Humanoid.Health, character.Humanoid.MaxHealth) character.Humanoid:GetPropertyChangedSignal("Health"):Connect(function() updateHealthBar(healthFrame, character.Humanoid.Health, character.Humanoid.MaxHealth) end) end end 
+
 end
 
-local function getDeviceEmoji(device)
-    if device == "Mobile" then
-        return "📱"
-    elseif device == "Console" then
-        return "🎮"
-    elseif device == "VR" then
-        return "🕶️"
-    else
-        return "💻"
-    end
-end
-
-local function updateRank(player)
-    local rankName = "Civil"
-    pcall(function()
-        if player:IsInGroup(GrupoID) then
-            rankName = player:GetRoleInGroup(GrupoID)
-        end
-    end)
-    player:SetAttribute("Rank", rankName)
-end
-
-local function createNameTag(player)
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-    local oldTag = character:FindFirstChild("PlayerNameTag")
-    if oldTag then oldTag:Destroy() end
-
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "PlayerNameTag"
-    billboard.Adornee = humanoidRootPart
-    billboard.Size = UDim2.new(0, 120, 0, 120)
-    billboard.StudsOffset = Vector3.new(0, 2.5, 0)
-    billboard.AlwaysOnTop = true
-    billboard.MaxDistance = 50
-    billboard.Parent = character
-
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, 0, 1, 0)
-    frame.BackgroundTransparency = 1
-    frame.Parent = billboard
-
-    local deviceEmoji = getDeviceEmoji(getPlayerDevice(player))
-    local teamColor = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
-
-    local line1 = Instance.new("TextLabel")
-    line1.Size = UDim2.new(1, 0, 0.3, 0)
-    line1.Position = UDim2.new(0, 0, 0, 5)
-    line1.Text = string.format("%s  - %s", deviceEmoji, player.Name)
-    line1.TextColor3 = teamColor
-    line1.BackgroundTransparency = 1
-    line1.TextScaled = true
-    line1.Font = Enum.Font.SourceSansBold
-    line1.Parent = frame
-
-    local teamName = player.Team and player.Team.Name or "N/A"
-    local line2 = Instance.new("TextLabel")
-    line2.Size = UDim2.new(1, 0, 0.15, 0)
-    line2.Position = UDim2.new(0, 0, 0.2, 6)
-    line2.Text = string.format(teamName)
-    line2.TextColor3 = teamColor
-    line2.BackgroundTransparency = 1
-    line2.TextScaled = true
-    line2.Font = Enum.Font.SourceSansBold 
-    line2.Parent = frame
-
-    local rank = player:GetAttribute("Rank") or "Civil"
-    local line3 = Instance.new("TextLabel")
-    line3.Size = UDim2.new(1, 0, 0.15, 0)
-    line3.Position = UDim2.new(0, 0, 0.6, -25)
-    line3.Text = string.format(rank)
-    line3.TextColor3 = teamColor
-    line3.BackgroundTransparency = 1
-    line3.TextScaled = true
-    line3.Font = Enum.Font.SourceSansBold
-    line3.Parent = frame
-
-    return billboard
-end
-
-local player = Players.LocalPlayer
-detectDevice(player)
-updateRank(player)
-
+Players.PlayerAdded:Connect(function(player)
 player.CharacterAdded:Connect(function(character)
-    task.wait(1)
-    updateRank(player)
-    createNameTag(player)
+onCharacterAdded(character, player)
+end)
 end)
 
-player:GetPropertyChangedSignal("Team"):Connect(function()
-    if player.Character then
-        createNameTag(player)
-    end
-end)
-
+for _, player in ipairs(Players:GetPlayers()) do
 if player.Character then
-    updateRank(player)
-    createNameTag(player)
+onCharacterAdded(player.Character, player)
 end
+end
+
