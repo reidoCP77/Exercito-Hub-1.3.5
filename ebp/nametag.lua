@@ -2,6 +2,8 @@
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 
+local GrupoID = 387273307 -- ID do grupo
+
 local function detectDevice(player)
     local device = "Desktop"
     local lastInput = UserInputService:GetLastInputType()
@@ -41,6 +43,16 @@ local function getDeviceEmoji(device)
     end
 end
 
+local function updateRank(player)
+    local rankName = "Civil"
+    pcall(function()
+        if player:IsInGroup(GrupoID) then
+            rankName = player:GetRoleInGroup(GrupoID)
+        end
+    end)
+    player:SetAttribute("Rank", rankName)
+end
+
 local function createNameTag(player)
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
@@ -62,12 +74,13 @@ local function createNameTag(player)
     frame.Parent = billboard
 
     local deviceEmoji = getDeviceEmoji(getPlayerDevice(player))
+    local teamColor = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
 
     local line1 = Instance.new("TextLabel")
     line1.Size = UDim2.new(1, 0, 0.3, 0)
     line1.Position = UDim2.new(0, 0, 0, 5)
     line1.Text = string.format("%s  - %s", deviceEmoji, player.Name)
-    line1.TextColor3 = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
+    line1.TextColor3 = teamColor
     line1.BackgroundTransparency = 1
     line1.TextScaled = true
     line1.Font = Enum.Font.SourceSansBold
@@ -78,18 +91,18 @@ local function createNameTag(player)
     line2.Size = UDim2.new(1, 0, 0.15, 0)
     line2.Position = UDim2.new(0, 0, 0.2, 6)
     line2.Text = string.format(teamName)
-    line2.TextColor3 = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
+    line2.TextColor3 = teamColor
     line2.BackgroundTransparency = 1
     line2.TextScaled = true
     line2.Font = Enum.Font.SourceSansBold 
     line2.Parent = frame
 
-    local rank = player:GetAttribute("Rank") or "N/A"
+    local rank = player:GetAttribute("Rank") or "Civil"
     local line3 = Instance.new("TextLabel")
     line3.Size = UDim2.new(1, 0, 0.15, 0)
     line3.Position = UDim2.new(0, 0, 0.6, -25)
     line3.Text = string.format(rank)
-    line3.TextColor3 = player.Team and player.Team.TeamColor.Color or Color3.new(1, 1, 1)
+    line3.TextColor3 = teamColor
     line3.BackgroundTransparency = 1
     line3.TextScaled = true
     line3.Font = Enum.Font.SourceSansBold
@@ -100,10 +113,11 @@ end
 
 local player = Players.LocalPlayer
 detectDevice(player)
-player:SetAttribute("Rank", "N/A")
+updateRank(player)
 
 player.CharacterAdded:Connect(function(character)
     task.wait(1)
+    updateRank(player)
     createNameTag(player)
 end)
 
@@ -114,5 +128,6 @@ player:GetPropertyChangedSignal("Team"):Connect(function()
 end)
 
 if player.Character then
+    updateRank(player)
     createNameTag(player)
 end
