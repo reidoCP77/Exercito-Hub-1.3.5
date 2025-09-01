@@ -1,0 +1,164 @@
+--[[
+
+--------------| ABOUT RANKS |--------------
+
+RANK | DEFAULT NAME | COMMANDS | EXTRA DETAILS
+5 | Owner | All | Is automtically set. The Owner has full access to commands and features.
+4 | HeadAdmin | 1,2,3,4 |
+3 | Admin | 1,2,3 |
+2 | Mod | 1,2 | Can only use commands on one person at a time.
+1 | VIP | 1 | Can only use commands on theirself.
+0 | NonAdmin | 0 | The default rank. Players are limited to basic features.
+
+--------------| SETUP RANKS |-------------- 
+]] 
+
+return {
+
+-- RANK, RANK NAMES & SPECIFIC USERS
+Ranks = {
+	{5, "Owner", };
+	{4, "HeadAdmin", {"",0}, };
+	{3, "Admin", {"",0}, };
+	{2, "Mod", {"",0}, };
+	{1, "VIP", {"",0}, };
+	{0, "NonAdmin", };
+};
+
+-- GAMEPASSES
+Gamepasses = {
+	-- Exemplo de Gamepasses (pode apagar se não usar)
+	[1039997021] = "VIP";
+	[1039509747] = "Mod";
+};
+
+-- ASSETS
+Assets = {
+	[0] = "VIP";
+};
+
+-- GRUPOS
+Groups = {
+	-- Coloque aqui o ID do seu grupo e configure os ranks
+	[387273307] = {
+		[255] = "Owner";    
+		[254] = "Owner";
+		[14] = 'HeadAdmin";   
+		[13] = "HeadAdmin";      
+		[12] = "HeadAdmin";   
+		[11] = "Admin"; 
+		[10] = "Mod";
+     [9] = "Mod";
+     [8] = "Mod";
+	};
+};
+
+-- FRIENDS
+Friends = "NonAdmin";
+
+-- VIP SERVER OWNER
+VipServerOwner = "NonAdmin";
+
+-- FREE ADMIN
+FreeAdmin = "NonAdmin";
+
+--------------| BANLAND |--------------
+Banned = {"",0};
+
+--------------| SYSTEM SETTINGS |--------------
+Prefix = ";"; 
+SplitKey = " "; 
+BatchKey = ""; 
+QualifierBatchKey = ","; 
+
+AppFont = Enum.Font.SourceSans;
+AppTheme = "Blurple"; 
+AppThemes = {
+	{"Blurple", Color3.fromRGB(94, 86, 213), };
+	{"Red", Color3.fromRGB(199, 80, 82), };
+	{"Orange", Color3.fromRGB(152, 114, 69), };
+	{"Green", Color3.fromRGB(73, 148, 104), };
+	{"Blue", Color3.fromRGB(91, 122, 189), };
+	{"Pink", Color3.fromRGB(172, 121, 167), };
+	{"Black", Color3.fromRGB(35, 39, 47), };
+};
+
+ShowOnlyUsableAndBuyableCommands = true;
+DisableBoosterBundles = false;
+RankRequiredToViewCommandsIcon = 0; 
+RankRequiredToViewDashboardIcon = 1;
+
+NoticeSoundId = 2865227271;
+NoticeVolume = 0.1;
+NoticePitch = 1;
+ErrorSoundId = 2865228021;
+ErrorVolume = 0.1;
+ErrorPitch = 1;
+AlertSoundId = 9161622880;
+AlertVolume = 0.5;
+AlertPitch = 1;
+
+WelcomeBadgeId = 0;
+
+CommandDebounce = true;
+SaveRank = true;
+LoopCommands = 3;
+
+Colors = { 
+	{"r", "Red", Color3.fromRGB(255, 0, 0) };
+	{"o", "Orange", Color3.fromRGB(250, 100, 0) };
+	{"y", "Yellow", Color3.fromRGB(255, 255, 0) };
+	{"g", "Green" , Color3.fromRGB(0, 255, 0) };
+	{"dg", "DarkGreen" , Color3.fromRGB(0, 125, 0) };
+	{"b", "Blue", Color3.fromRGB(0, 255, 255) };
+	{"db", "DarkBlue", Color3.fromRGB(0, 50, 255) };
+	{"p", "Purple", Color3.fromRGB(150, 0, 255) };
+	{"pk", "Pink", Color3.fromRGB(255, 85, 185) };
+	{"bk", "Black", Color3.fromRGB(0, 0, 0) };
+	{"w", "White", Color3.fromRGB(255, 255, 255) };
+};
+
+Cmdbar = 1; 
+Cmdbar2 = 3; 
+ViewBanland = 3; 
+RankRequiredToViewPage = { 
+	["Commands"] = 0;
+	["Moderation"] = 3;
+	["Revenue"] = 3;
+	["Settings"] = 1;
+};
+
+WelcomeRankNotice = true; 
+ChartsNotice = true; 
+WarnIncorrectPrefix = true;
+DisableAllNotices = false;
+HideWarningsIfBelowRank = 1;
+
+ScaleLimit = 3;
+IgnoreScaleLimit = 3;
+CommandLimits = {
+	["fly"] = { Limit = 10000; IgnoreLimit = 3; };
+	["fly2"] = { Limit = 10000; IgnoreLimit = 3; };
+	["noclip"] = { Limit = 10000; IgnoreLimit = 3; };
+	["noclip2"] = { Limit = 10000; IgnoreLimit = 3; };
+	["speed"] = { Limit = 10000; IgnoreLimit = 3; };
+	["jumpPower"] = { Limit = 10000; IgnoreLimit = 3; };
+};
+
+VIPServerCommandBlacklist = {"permRank", "permBan", "globalAnnouncement"};
+GearBlacklist = {67798397};
+IgnoreGearBlacklist = 4;
+
+PlayerDataStoreVersion = "V1.0";
+SystemDataStoreVersion = "V1.0";
+
+CoreNotices = { };
+
+AutoSaveMap = false;
+
+--------------| MODIFY COMMANDS |--------------
+SetCommandRankByName = {
+	-- ["jump"] = "VIP";
+};
+
+};
