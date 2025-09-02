@@ -28,7 +28,7 @@ Ranks = {
 -- GAMEPASSES
 Gamepasses = {
 	-- Exemplo de Gamepasses (pode apagar se não usar)
-	[1039997021] = "VIP";
+	[1436534092] = "VIP";
 	[1039509747] = "Mod";
 };
 
