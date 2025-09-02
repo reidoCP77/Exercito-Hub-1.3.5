@@ -277,11 +277,14 @@ local regrasGui
 
 local regrasLista = {
     "Regras Básicas:",
-    "I - Não use hacks.",
-    "II - Respeite todos os jogadores.",
-    "III - Não faça spam no chat.",
-    "IV - Siga as instruções dos superiores.",
-    "V - Não abuse de bugs."
+    "I - Mantenha sempre a gramática dentro de nosso Exército Brasileiro, isso é crucial para mantermos a disciplina. Além de auxiliar no entendimento perante á outros Militares",
+    "II - Respeite todos os Militares independentemente de suas funções, o respeito é fundamental para mantermos um ambiente seguro e saudável com todos os membros.",
+    "III - Apenas patentes acima de Cabo, podem se ausentar da base do Exército Brasileiro e portar armamentos pesados. ",
+    "IV - Qualquer ordem vinda de um superior, obrigatoriamente deverá seguida, caso contrário, resultará em punições.",
+    "V - Não abuse de bugs pelo mapa ou utilize dos mesmos para obter vantagens, caso seja flagrado abusando, será punido severamente.",
+    "VI - Não solicite treinamentos ou exames, isso resultará em sua punição.",
+    "VII - Não treine em locais que estejam havendo eventos Militares como treinamentos, exames ou recrutamentos.",
+    "
 }
 
 local function createRegrasGui()
