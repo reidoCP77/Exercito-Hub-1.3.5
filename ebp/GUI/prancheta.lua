@@ -1,11 +1,21 @@
--- LocalScript dentro de StarterPlayerScripts ou StarterGui
+-- LocalScript dentro de StarterPlayerScripts
 
 -- Serviços
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
+
+-- =========================
+-- Configurações de tamanho
+-- =========================
+local MAIN_WIDTH = 700  -- aumentei aqui
+local MAIN_HEIGHT = 340
+local POPUP_WIDTH = MAIN_WIDTH - 40
+local POPUP_HEIGHT = MAIN_HEIGHT - 40
 
 -- =========================
 -- Criar a ScreenGui
@@ -20,8 +30,8 @@ screenGui.Parent = playerGui
 -- =========================
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 400, 0, 300)
-mainFrame.Position = UDim2.new(0.5, -200, 0.3, -150)
+mainFrame.Size = UDim2.new(0, MAIN_WIDTH, 0, MAIN_HEIGHT)
+mainFrame.Position = UDim2.new(0.5, -MAIN_WIDTH/2, 0.3, -MAIN_HEIGHT/2)
 mainFrame.BackgroundColor3 = Color3.fromRGB(0, 50, 0)
 mainFrame.BorderSizePixel = 0
 mainFrame.Parent = screenGui
@@ -40,15 +50,15 @@ buttonBar.Position = UDim2.new(0, 10, 0, 10)
 buttonBar.BackgroundTransparency = 1
 buttonBar.Parent = mainFrame
 
-local buttonNames = {"Pontuações", "Relatórios", "Cronômetro", "Anotações"}
-local buttonCount = #buttonNames
+local buttonNames = {"Pontuações", "Regras", "Relatórios", "Cronômetro", "Anotações"}
+local buttons = {}
 local buttonSpacing = 10
 
 for i, name in ipairs(buttonNames) do
     local button = Instance.new("TextButton")
-    button.Name = name.."Button"
+    button.Name = name .. "Button"
     button.Text = name
-    button.Size = UDim2.new(0, 80, 1, 0)
+    button.Size = UDim2.new(0, 80, 1, 0) -- será reajustado por adjustButtons
     button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.Parent = buttonBar
@@ -56,15 +66,20 @@ for i, name in ipairs(buttonNames) do
     local buttonCorner = Instance.new("UICorner")
     buttonCorner.CornerRadius = UDim.new(0, 10)
     buttonCorner.Parent = button
+
+    table.insert(buttons, button)
 end
 
 local function adjustButtons()
+    if not buttonBar:IsDescendantOf(game) then return end
     local totalWidth = buttonBar.AbsoluteSize.X
+    local buttonCount = #buttons
+    if buttonCount == 0 then return end
     local buttonWidth = (totalWidth - buttonSpacing * (buttonCount - 1)) / buttonCount
-    for i, button in ipairs(buttonBar:GetChildren()) do
-        if button:IsA("TextButton") then
+    for i, button in ipairs(buttons) do
+        if button and button.Parent == buttonBar then
             button.Size = UDim2.new(0, buttonWidth, 1, 0)
-            button.Position = UDim2.new(0, (i-1)*(buttonWidth + buttonSpacing), 0, 0)
+            button.Position = UDim2.new(0, (i-1) * (buttonWidth + buttonSpacing), 0, 0)
         end
     end
 end
@@ -120,9 +135,9 @@ end)
 -- Função para botões universais (PC, Mobile, Console)
 -- =========================
 local function connectButton(button, callback)
-    -- Activated funciona para mouse, touch e gamepad
     button.Activated:Connect(callback)
 end
+
 -- =========================
 -- Funcionalidade de Pontuações
 -- =========================
@@ -137,8 +152,8 @@ local function createScoresGui()
 
     scoresGui = Instance.new("Frame")
     scoresGui.Name = "ScoresFrame"
-    scoresGui.Size = UDim2.new(0, 380, 0, 250)
-    scoresGui.Position = UDim2.new(0.5, -190, 0.5, -125)
+    scoresGui.Size = UDim2.new(0, POPUP_WIDTH, 0, POPUP_HEIGHT)
+    scoresGui.Position = UDim2.new(0.5, -POPUP_WIDTH/2, 0.5, -POPUP_HEIGHT/2)
     scoresGui.BackgroundColor3 = mainFrame.BackgroundColor3
     scoresGui.BorderSizePixel = 0
     scoresGui.Parent = screenGui
@@ -256,27 +271,8 @@ local function createScoresGui()
 end
 
 -- =========================
--- Botão Regras
--- =========================
-local rulesButton = Instance.new("TextButton")
-rulesButton.Name = "RegrasButton"
-rulesButton.Text = "Regras"
-rulesButton.Size = UDim2.new(0, 80, 1, 0)
-rulesButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
-rulesButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-rulesButton.Parent = buttonBar
-
-local buttonCorner = Instance.new("UICorner")
-buttonCorner.CornerRadius = UDim.new(0, 10)
-buttonCorner.Parent = rulesButton
-
--- Ajustar largura dos botões novamente
-adjustButtons()
-
--- =========================
 -- Funcionalidade de Regras
 -- =========================
-
 local regrasGui
 
 local regrasLista = {
@@ -297,8 +293,8 @@ local function createRegrasGui()
 
     regrasGui = Instance.new("Frame")
     regrasGui.Name = "RegrasFrame"
-    regrasGui.Size = UDim2.new(0, 380, 0, 250)
-    regrasGui.Position = UDim2.new(0.5, -190, 0.5, -125)
+    regrasGui.Size = UDim2.new(0, POPUP_WIDTH, 0, POPUP_HEIGHT)
+    regrasGui.Position = UDim2.new(0.5, -POPUP_WIDTH/2, 0.5, -POPUP_HEIGHT/2)
     regrasGui.BackgroundColor3 = Color3.fromRGB(0, 50, 0)
     regrasGui.BorderSizePixel = 0
     regrasGui.Parent = screenGui
@@ -319,7 +315,6 @@ local function createRegrasGui()
     uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
     uiListLayout.Parent = regrasList
 
-    -- Criar botões de regras
     for _, regra in ipairs(regrasLista) do
         local regraButton = Instance.new("TextButton")
         regraButton.Text = regra
@@ -333,14 +328,20 @@ local function createRegrasGui()
         regraCorner.Parent = regraButton
 
         connectButton(regraButton, function()
-            -- Enviar no chat global com balão
-            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(regra, "All")
+            -- tenta enviar no chat global (protege com pcall caso não exista)
+            local ok, err = pcall(function()
+                local chatEvents = ReplicatedStorage:WaitForChild("DefaultChatSystemChatEvents", 1)
+                if chatEvents and chatEvents:FindFirstChild("SayMessageRequest") then
+                    chatEvents.SayMessageRequest:FireServer(regra, "All")
+                end
+            end)
+            if not ok then
+                warn("Não foi possível enviar a regra no chat: "..tostring(err))
+            end
         end)
     end
 end
 
--- Conectar botão Regras
-connectButton(rulesButton, createRulesGui)
 -- =========================
 -- Funcionalidade de Relatórios
 -- =========================
@@ -361,8 +362,8 @@ local function createReportsGui()
 
     reportsGui = Instance.new("Frame")
     reportsGui.Name = "ReportsFrame"
-    reportsGui.Size = UDim2.new(0, 380, 0, 250)
-    reportsGui.Position = UDim2.new(0.5, -190, 0.5, -125)
+    reportsGui.Size = UDim2.new(0, POPUP_WIDTH, 0, POPUP_HEIGHT)
+    reportsGui.Position = UDim2.new(0.5, -POPUP_WIDTH/2, 0.5, -POPUP_HEIGHT/2)
     reportsGui.BackgroundColor3 = mainFrame.BackgroundColor3
     reportsGui.BorderSizePixel = 0
     reportsGui.Parent = screenGui
@@ -378,13 +379,13 @@ local function createReportsGui()
     buttonContainer.Parent = reportsGui
 
     local reportButtons = {"Alistamento", "Treinamento"}
-    local buttonSpacing = 10
+    local btnSpacing = 10
     for i, name in ipairs(reportButtons) do
         local button = Instance.new("TextButton")
         button.Name = name.."Button"
         button.Text = name
         button.Size = UDim2.new(0, 150, 1, 0)
-        button.Position = UDim2.new(0, (i-1)*(150 + buttonSpacing), 0, 0)
+        button.Position = UDim2.new(0, (i-1)*(150 + btnSpacing), 0, 0)
         button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
         button.TextColor3 = Color3.fromRGB(255, 255, 255)
         button.Parent = buttonContainer
@@ -480,8 +481,8 @@ local function createTimerGui()
 
     timerGui = Instance.new("Frame")
     timerGui.Name = "TimerFrame"
-    timerGui.Size = UDim2.new(0, 380, 0, 250)
-    timerGui.Position = UDim2.new(0.5, -190, 0.5, -125)
+    timerGui.Size = UDim2.new(0, POPUP_WIDTH, 0, POPUP_HEIGHT)
+    timerGui.Position = UDim2.new(0.5, -POPUP_WIDTH/2, 0.5, -POPUP_HEIGHT/2)
     timerGui.BackgroundColor3 = mainFrame.BackgroundColor3
     timerGui.BorderSizePixel = 0
     timerGui.Parent = screenGui
@@ -577,8 +578,8 @@ local function createNotesGui()
 
     notesGui = Instance.new("Frame")
     notesGui.Name = "NotesFrame"
-    notesGui.Size = UDim2.new(0, 380, 0, 250)
-    notesGui.Position = UDim2.new(0.5, -190, 0.5, -125)
+    notesGui.Size = UDim2.new(0, POPUP_WIDTH, 0, POPUP_HEIGHT)
+    notesGui.Position = UDim2.new(0.5, -POPUP_WIDTH/2, 0.5, -POPUP_HEIGHT/2)
     notesGui.BackgroundColor3 = mainFrame.BackgroundColor3
     notesGui.BorderSizePixel = 0
     notesGui.Parent = screenGui
@@ -600,18 +601,18 @@ local function createNotesGui()
 end
 
 -- =========================
--- Conectar os botões principais
+-- Conectar os botões principais (usando a tabela 'buttons')
 -- =========================
-for _, button in ipairs(buttonBar:GetChildren()) do
-    if button:IsA("TextButton") then
-        if button.Name == "PontuaçõesButton" then
-            connectButton(button, createScoresGui)
-        elseif button.Name == "RelatóriosButton" then
-            connectButton(button, createReportsGui)
-        elseif button.Name == "CronômetroButton" then
-            connectButton(button, createTimerGui)
-        elseif button.Name == "AnotaçõesButton" then
-            connectButton(button, createNotesGui)
-        end
+for _, button in ipairs(buttons) do
+    if button.Name == "PontuaçõesButton" then
+        connectButton(button, createScoresGui)
+    elseif button.Name == "RegrasButton" then
+        connectButton(button, createRegrasGui)
+    elseif button.Name == "RelatóriosButton" then
+        connectButton(button, createReportsGui)
+    elseif button.Name == "CronômetroButton" then
+        connectButton(button, createTimerGui)
+    elseif button.Name == "AnotaçõesButton" then
+        connectButton(button, createNotesGui)
     end
 end
