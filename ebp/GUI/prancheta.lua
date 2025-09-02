@@ -256,6 +256,90 @@ local function createScoresGui()
 end
 
 -- =========================
+-- Botão Regras
+-- =========================
+local rulesButton = Instance.new("TextButton")
+rulesButton.Name = "RegrasButton"
+rulesButton.Text = "Regras"
+rulesButton.Size = UDim2.new(0, 80, 1, 0)
+rulesButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+rulesButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+rulesButton.Parent = buttonBar
+
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 10)
+buttonCorner.Parent = rulesButton
+
+-- Ajustar largura dos botões novamente
+adjustButtons()
+
+-- =========================
+-- Funcionalidade das Regras
+-- =========================
+local rulesGui
+local rulesList = {
+    "I - Usar gramática.",
+    "II - Respeitar os colegas.",
+    "III - Não usar linguagem ofensiva.",
+    "IV - Seguir as instruções do instrutor.",
+    "V - Manter organização no chat."
+}
+
+local function createRulesGui()
+    if rulesGui then
+        rulesGui:Destroy()
+        rulesGui = nil
+        return
+    end
+
+    rulesGui = Instance.new("Frame")
+    rulesGui.Name = "RulesFrame"
+    rulesGui.Size = UDim2.new(0, 380, 0, 250)
+    rulesGui.Position = UDim2.new(0.5, -190, 0.5, -125)
+    rulesGui.BackgroundColor3 = mainFrame.BackgroundColor3
+    rulesGui.BorderSizePixel = 0
+    rulesGui.Parent = screenGui
+
+    local uICornerRules = Instance.new("UICorner")
+    uICornerRules.CornerRadius = UDim.new(0, 15)
+    uICornerRules.Parent = rulesGui
+
+    local uiListLayout = Instance.new("UIListLayout")
+    uiListLayout.Padding = UDim.new(0, 10)
+    uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    uiListLayout.Parent = rulesGui
+
+    -- Criar botões de regras
+    for i, ruleText in ipairs(rulesList) do
+        local ruleButton = Instance.new("TextButton")
+        ruleButton.Name = "Rule"..i
+        ruleButton.Text = ruleText
+        ruleButton.Size = UDim2.new(1, -20, 0, 40)
+        ruleButton.Position = UDim2.new(0, 10, 0, 0)
+        ruleButton.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+        ruleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        ruleButton.TextScaled = true
+        ruleButton.Parent = rulesGui
+
+        local ruleCorner = Instance.new("UICorner")
+        ruleCorner.CornerRadius = UDim.new(0, 10)
+        ruleCorner.Parent = ruleButton
+
+        connectButton(ruleButton, function()
+            -- Simular mensagem no chat
+            game.StarterGui:SetCore("ChatMakeSystemMessage", {
+                Text = ruleText,
+                Color = Color3.fromRGB(0, 255, 0),
+                Font = Enum.Font.SourceSansBold,
+                FontSize = Enum.FontSize.Size24
+            })
+        end)
+    end
+end
+
+-- Conectar botão Regras
+connectButton(rulesButton, createRulesGui)
+-- =========================
 -- Funcionalidade de Relatórios
 -- =========================
 local reportsGui
