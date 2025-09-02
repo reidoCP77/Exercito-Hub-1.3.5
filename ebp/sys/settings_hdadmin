@@ -43,7 +43,7 @@ Groups = {
 	[387273307] = {
 		[255] = "Owner";    
 		[254] = "Owner";
-		[14] = 'HeadAdmin";   
+		[14] = "HeadAdmin";   
 		[13] = "HeadAdmin";      
 		[12] = "HeadAdmin";   
 		[11] = "Admin"; 
@@ -54,10 +54,10 @@ Groups = {
 };
 
 -- FRIENDS
-Friends = "NonAdmin";
+Friends = {"NonAdmin"};
 
 -- VIP SERVER OWNER
-VipServerOwner = "NonAdmin";
+VipServerOwner = {"NonAdmin"};
 
 -- FREE ADMIN
 FreeAdmin = "NonAdmin";
