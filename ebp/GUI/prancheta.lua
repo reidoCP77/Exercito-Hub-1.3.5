@@ -120,14 +120,9 @@ end)
 -- Função para botões universais (PC, Mobile, Console)
 -- =========================
 local function connectButton(button, callback)
-    button.MouseButton1Click:Connect(callback)
-    button.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Gamepad1 then
-            callback()
-        end
-    end)
+    -- Activated funciona para mouse, touch e gamepad
+    button.Activated:Connect(callback)
 end
-
 -- =========================
 -- Funcionalidade de Pontuações
 -- =========================
