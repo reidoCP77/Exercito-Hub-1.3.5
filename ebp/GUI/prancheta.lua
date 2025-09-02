@@ -274,65 +274,67 @@ buttonCorner.Parent = rulesButton
 adjustButtons()
 
 -- =========================
--- Funcionalidade das Regras
+-- Funcionalidade de Regras
 -- =========================
-local rulesGui
-local rulesList = {
-    "I - Usar gramática.",
-    "II - Respeitar os colegas.",
-    "III - Não usar linguagem ofensiva.",
-    "IV - Seguir as instruções do instrutor.",
-    "V - Manter organização no chat."
+
+local regrasGui
+
+local regrasLista = {
+    "Regras Básicas:",
+    "I - Não use hacks.",
+    "II - Respeite todos os jogadores.",
+    "III - Não faça spam no chat.",
+    "IV - Siga as instruções dos superiores.",
+    "V - Não abuse de bugs."
 }
 
-local function createRulesGui()
-    if rulesGui then
-        rulesGui:Destroy()
-        rulesGui = nil
+local function createRegrasGui()
+    if regrasGui then
+        regrasGui:Destroy()
+        regrasGui = nil
         return
     end
 
-    rulesGui = Instance.new("Frame")
-    rulesGui.Name = "RulesFrame"
-    rulesGui.Size = UDim2.new(0, 380, 0, 250)
-    rulesGui.Position = UDim2.new(0.5, -190, 0.5, -125)
-    rulesGui.BackgroundColor3 = mainFrame.BackgroundColor3
-    rulesGui.BorderSizePixel = 0
-    rulesGui.Parent = screenGui
+    regrasGui = Instance.new("Frame")
+    regrasGui.Name = "RegrasFrame"
+    regrasGui.Size = UDim2.new(0, 380, 0, 250)
+    regrasGui.Position = UDim2.new(0.5, -190, 0.5, -125)
+    regrasGui.BackgroundColor3 = Color3.fromRGB(0, 50, 0)
+    regrasGui.BorderSizePixel = 0
+    regrasGui.Parent = screenGui
 
-    local uICornerRules = Instance.new("UICorner")
-    uICornerRules.CornerRadius = UDim.new(0, 15)
-    uICornerRules.Parent = rulesGui
+    local uICornerRegras = Instance.new("UICorner")
+    uICornerRegras.CornerRadius = UDim.new(0, 15)
+    uICornerRegras.Parent = regrasGui
+
+    local regrasList = Instance.new("ScrollingFrame")
+    regrasList.Size = UDim2.new(1, -20, 1, -20)
+    regrasList.Position = UDim2.new(0, 10, 0, 10)
+    regrasList.BackgroundTransparency = 1
+    regrasList.ScrollBarThickness = 6
+    regrasList.Parent = regrasGui
 
     local uiListLayout = Instance.new("UIListLayout")
     uiListLayout.Padding = UDim.new(0, 10)
     uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    uiListLayout.Parent = rulesGui
+    uiListLayout.Parent = regrasList
 
     -- Criar botões de regras
-    for i, ruleText in ipairs(rulesList) do
-        local ruleButton = Instance.new("TextButton")
-        ruleButton.Name = "Rule"..i
-        ruleButton.Text = ruleText
-        ruleButton.Size = UDim2.new(1, -20, 0, 40)
-        ruleButton.Position = UDim2.new(0, 10, 0, 0)
-        ruleButton.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
-        ruleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-        ruleButton.TextScaled = true
-        ruleButton.Parent = rulesGui
+    for _, regra in ipairs(regrasLista) do
+        local regraButton = Instance.new("TextButton")
+        regraButton.Text = regra
+        regraButton.Size = UDim2.new(1, -10, 0, 40)
+        regraButton.BackgroundColor3 = Color3.fromRGB(0, 120, 0)
+        regraButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        regraButton.Parent = regrasList
 
-        local ruleCorner = Instance.new("UICorner")
-        ruleCorner.CornerRadius = UDim.new(0, 10)
-        ruleCorner.Parent = ruleButton
+        local regraCorner = Instance.new("UICorner")
+        regraCorner.CornerRadius = UDim.new(0, 8)
+        regraCorner.Parent = regraButton
 
-        connectButton(ruleButton, function()
-            -- Simular mensagem no chat
-            game.StarterGui:SetCore("ChatMakeSystemMessage", {
-                Text = ruleText,
-                Color = Color3.fromRGB(0, 255, 0),
-                Font = Enum.Font.SourceSansBold,
-                FontSize = Enum.FontSize.Size24
-            })
+        connectButton(regraButton, function()
+            -- Enviar no chat global com balão
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(regra, "All")
         end)
     end
 end
