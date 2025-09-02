@@ -330,6 +330,10 @@ local regrasLista = {
     "DOIS !",
     "TRÊS !",
     "Assim vai...",
+    "Alguma dúvida?",
+    "Capacitação de Patente (CDP):",
+    "A capacitação de patente (CDP) é a meta necessária para um militar ser promovido, podendo ser em dias e também com suas funções.",
+    "Vale ressaltar que os militares qué possuem a passe 'VIP', têm a CDP reduzida e conseguem ser Promovidos mais rapidamente.",
     "Alguma dúvida?"
 }
 
