@@ -276,15 +276,22 @@ end
 local regrasGui
 
 local regrasLista = {
+    "Fiquem atentos e não atrapalhem as instruções, pois será essencial que vocês aprendam tudo o que for dito.",
     "Regras Básicas:",
-    "I - Mantenha sempre a gramática dentro de nosso Exército Brasileiro, isso é crucial para mantermos a disciplina. Além de auxiliar no entendimento perante á outros Militares",
-    "II - Respeite todos os Militares independentemente de suas funções, o respeito é fundamental para mantermos um ambiente seguro e saudável com todos os membros.",
-    "III - Apenas patentes acima de Cabo, podem se ausentar da base do Exército Brasileiro e portar armamentos pesados. ",
-    "IV - Qualquer ordem vinda de um superior, obrigatoriamente deverá seguida, caso contrário, resultará em punições.",
-    "V - Não abuse de bugs pelo mapa ou utilize dos mesmos para obter vantagens, caso seja flagrado abusando, será punido severamente.",
-    "VI - Não solicite treinamentos ou exames, isso resultará em sua punição.",
-    "VII - Não treine em locais que estejam havendo eventos Militares como treinamentos, exames ou recrutamentos.",
-    "
+    "I-) É estritamente proibido ser de outro órgão militar brasileiro, pois é considerado traição;",
+    "II-) Proibido desrespeitar qualquer militar, sendo sublaterno ou superior;",
+    "III-) Utilize gramática: pontuações, acentuações, letra maiuscula e minuscula;",
+    "IV-) É proibido abreviar as palavras (ex: blz, tmj...);",
+    "V-) Gírias que não sejam militares são proibidas (ex: suave, firmeza...);"
+    "VI-) A disciplina é obrigatória em nossa instituição;",
+    "VII-) Apenas militares da patente Cabo+ podem comprar armamentos e sair da base;",
+    "VIII-) Caso não cumpra com alguma punição solicitada, será exilado(a) imediatamente do Exército Brasileiro;",
+    "IX-) Sempre utilize pronomes com os superiores (ex: Senhor ou Senhora);",
+    "X-) Não é permitido perguntar ou pedir treinamentos e exames, caso contrário, será punido(a);",
+    "XI-) Não treine em locais que esteja ocorrendo treinamentos, exames ou instruções;",
+    "XII-) É extremamente proibido perguntas pessoais, caso faça, será punido(a);",
+    "XIII-) É obrigatório utilizar o fardamento correto. Caso seja 'VIP', poderá personalizar com um tema militar.",
+    "Alguma dúvida?",
 }
 
 local function createRegrasGui()
