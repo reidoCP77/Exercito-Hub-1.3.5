@@ -117,9 +117,22 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 -- =========================
+-- Função para botões universais (PC, Mobile, Console)
+-- =========================
+local function connectButton(button, callback)
+    button.MouseButton1Click:Connect(callback)
+    button.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Gamepad1 then
+            callback()
+        end
+    end)
+end
+
+-- =========================
 -- Funcionalidade de Pontuações
 -- =========================
 local scoresGui
+
 local function createScoresGui()
     if scoresGui then
         scoresGui:Destroy()
@@ -199,12 +212,11 @@ local function createScoresGui()
         minusButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
         minusButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         minusButton.Parent = itemFrame
-
         local minusCorner = Instance.new("UICorner")
         minusCorner.CornerRadius = UDim.new(0, 5)
         minusCorner.Parent = minusButton
 
-        minusButton.MouseButton1Click:Connect(function()
+        connectButton(minusButton, function()
             score = score - 1
             scoreLabel.Text = tostring(score)
         end)
@@ -216,12 +228,11 @@ local function createScoresGui()
         plusButton.BackgroundColor3 = Color3.fromRGB(0, 0, 200)
         plusButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         plusButton.Parent = itemFrame
-
         local plusCorner = Instance.new("UICorner")
         plusCorner.CornerRadius = UDim.new(0, 5)
         plusCorner.Parent = plusButton
 
-        plusButton.MouseButton1Click:Connect(function()
+        connectButton(plusButton, function()
             score = score + 1
             scoreLabel.Text = tostring(score)
         end)
@@ -233,12 +244,11 @@ local function createScoresGui()
         deleteButton.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
         deleteButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         deleteButton.Parent = itemFrame
-
         local deleteCorner = Instance.new("UICorner")
         deleteCorner.CornerRadius = UDim.new(0, 5)
         deleteCorner.Parent = deleteButton
 
-        deleteButton.MouseButton1Click:Connect(function()
+        connectButton(deleteButton, function()
             itemFrame:Destroy()
         end)
     end
@@ -246,6 +256,8 @@ local function createScoresGui()
     for _, plr in ipairs(Players:GetPlayers()) do
         createPlayerItem(plr)
     end
+
+    Players.PlayerAdded:Connect(createPlayerItem)
 end
 
 -- =========================
@@ -256,7 +268,7 @@ local groupId = 387273307
 
 local function getRoleTag(plr)
     local roleName = plr:GetRoleInGroup(groupId)
-    return "["..string.sub(roleName, 1, 1).."] "..roleName
+    return "["..string.sub(roleName,1,1).."] "..roleName
 end
 
 local function createReportsGui()
@@ -286,8 +298,6 @@ local function createReportsGui()
 
     local reportButtons = {"Alistamento", "Treinamento"}
     local buttonSpacing = 10
-    local buttonCount = #reportButtons
-
     for i, name in ipairs(reportButtons) do
         local button = Instance.new("TextButton")
         button.Name = name.."Button"
@@ -302,7 +312,7 @@ local function createReportsGui()
         buttonCorner.CornerRadius = UDim.new(0, 10)
         buttonCorner.Parent = button
 
-        button.MouseButton1Click:Connect(function()
+        connectButton(button, function()
             local frameName = name.."Frame"
             if reportsGui:FindFirstChild(frameName) then
                 reportsGui[frameName]:Destroy()
@@ -333,7 +343,7 @@ local function createReportsGui()
             textBox.ClearTextOnFocus = false
             textBox.Parent = reportFrame
 
-            local reportTitle = name == "Alistamento" and "RELATÓRIO DE ALISTAMENTO" or "RELATÓRIO DE PROMOÇÃO - {categoria}"
+            local reportTitle = name == "Alistamento" and "RELATÓRIO DE ALISTAMENTO" or "RELATÓRIO DE TREINAMENTO"
             local reportText = "**⌠ "..reportTitle.." ⌡**\n─────────────────────────────\n" ..
                                "* **Instrutor(a):** "..player.Name.."\n" ..
                                "* **Auxiliar(es):**\n" ..
@@ -399,7 +409,6 @@ local function createTimerGui()
     uICornerTimer.CornerRadius = UDim.new(0, 15)
     uICornerTimer.Parent = timerGui
 
-    -- TextBox
     local timerBox = Instance.new("TextBox")
     timerBox.Size = UDim2.new(1, -20, 0, 50)
     timerBox.Position = UDim2.new(0, 10, 0, 20)
@@ -413,11 +422,10 @@ local function createTimerGui()
     uICornerBox.CornerRadius = UDim.new(0, 10)
     uICornerBox.Parent = timerBox
 
-    -- Botões
     local startButton = Instance.new("TextButton")
-    startButton.Text = "Iniciar"
+    startButton.Text = "Start"
     startButton.Size = UDim2.new(0, 100, 0, 40)
-    startButton.Position = UDim2.new(0, 10, 0, 90)
+    startButton.Position = UDim2.new(0, 50, 0, 100)
     startButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
     startButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     startButton.Parent = timerGui
@@ -425,46 +433,58 @@ local function createTimerGui()
     startCorner.CornerRadius = UDim.new(0, 10)
     startCorner.Parent = startButton
 
-    local pauseButton = startButton:Clone()
-    pauseButton.Text = "Pausar"
-    pauseButton.Position = UDim2.new(0, 120, 0, 90)
-    pauseButton.Parent = timerGui
+    local stopButton = Instance.new("TextButton")
+    stopButton.Text = "Stop"
+    stopButton.Size = UDim2.new(0, 100, 0, 40)
+    stopButton.Position = UDim2.new(0, 200, 0, 100)
+    stopButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    stopButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    stopButton.Parent = timerGui
+    local stopCorner = Instance.new("UICorner")
+    stopCorner.CornerRadius = UDim.new(0, 10)
+    stopCorner.Parent = stopButton
 
-    local resetButton = startButton:Clone()
-    resetButton.Text = "Resetar"
-    resetButton.Position = UDim2.new(0, 230, 0, 90)
+    local resetButton = Instance.new("TextButton")
+    resetButton.Text = "Reset"
+    resetButton.Size = UDim2.new(0, 100, 0, 40)
+    resetButton.Position = UDim2.new(0, 125, 0, 160)
+    resetButton.BackgroundColor3 = Color3.fromRGB(100, 100, 0)
+    resetButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     resetButton.Parent = timerGui
+    local resetCorner = Instance.new("UICorner")
+    resetCorner.CornerRadius = UDim.new(0, 10)
+    resetCorner.Parent = resetButton
 
-    startButton.MouseButton1Click:Connect(function()
+    connectButton(startButton, function()
         if not timerRunning then
             timerRunning = true
-            startTime = tick() - elapsedTime/1000
+            startTime = tick() - elapsedTime
         end
     end)
 
-    pauseButton.MouseButton1Click:Connect(function()
+    connectButton(stopButton, function()
         if timerRunning then
             timerRunning = false
-            elapsedTime = (tick() - startTime) * 1000
+            elapsedTime = tick() - startTime
         end
     end)
 
-    resetButton.MouseButton1Click:Connect(function()
+    connectButton(resetButton, function()
         timerRunning = false
         elapsedTime = 0
-        timerBox.Text = "00(m):00(s):00(ms)"
+        timerBox.Text = formatTime(0)
     end)
 
     RunService.RenderStepped:Connect(function()
         if timerRunning then
-            elapsedTime = (tick() - startTime) * 1000
-            timerBox.Text = formatTime(elapsedTime)
+            elapsedTime = tick() - startTime
+            timerBox.Text = formatTime(elapsedTime * 1000)
         end
     end)
 end
 
 -- =========================
--- Funcionalidade de Anotações
+-- Função de Anotações
 -- =========================
 local notesGui
 local function createNotesGui()
@@ -495,32 +515,22 @@ local function createNotesGui()
     textBox.TextYAlignment = Enum.TextYAlignment.Top
     textBox.MultiLine = true
     textBox.ClearTextOnFocus = false
-    textBox.Text = "Digite suas anotações aqui..."
     textBox.Parent = notesGui
 end
 
 -- =========================
--- Vincular botões da barra principal
+-- Conectar os botões principais
 -- =========================
-mainFrame:WaitForChild("ButtonBar"):GetChildren()
 for _, button in ipairs(buttonBar:GetChildren()) do
     if button:IsA("TextButton") then
-        button.MouseButton1Click:Connect(function()
-            -- Fecha todas as GUIs abertas
-            if scoresGui then scoresGui:Destroy() scoresGui = nil end
-            if reportsGui then reportsGui:Destroy() reportsGui = nil end
-            if timerGui then timerGui:Destroy() timerGui = nil end
-            if notesGui then notesGui:Destroy() notesGui = nil end
-
-            if button.Name == "PontuaçõesButton" then
-                createScoresGui()
-            elseif button.Name == "RelatóriosButton" then
-                createReportsGui()
-            elseif button.Name == "CronômetroButton" then
-                createTimerGui()
-            elseif button.Name == "AnotaçõesButton" then
-                createNotesGui()
-            end
-        end)
+        if button.Name == "PontuaçõesButton" then
+            connectButton(button, createScoresGui)
+        elseif button.Name == "RelatóriosButton" then
+            connectButton(button, createReportsGui)
+        elseif button.Name == "CronômetroButton" then
+            connectButton(button, createTimerGui)
+        elseif button.Name == "AnotaçõesButton" then
+            connectButton(button, createNotesGui)
+        end
     end
 end
