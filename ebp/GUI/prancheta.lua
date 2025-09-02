@@ -12,7 +12,7 @@ local playerGui = player:WaitForChild("PlayerGui")
 -- =========================
 -- Configurações de tamanho
 -- =========================
-local MAIN_WIDTH = 700  -- aumentei aqui
+local MAIN_WIDTH = 700
 local MAIN_HEIGHT = 340
 local POPUP_WIDTH = MAIN_WIDTH - 40
 local POPUP_HEIGHT = MAIN_HEIGHT - 40
@@ -279,24 +279,24 @@ local regrasLista = {
     "Fiquem atentos e não atrapalhem as instruções, pois será essencial que vocês aprendam tudo o que for dito.",
     "Regras Básicas:",
     "I-) É estritamente proibido ser de outro órgão militar brasileiro, pois é considerado traição;",
-    "II-) Proibido desrespeitar qualquer militar, sendo sublaterno ou superior;",
-    "III-) Utilize gramática: pontuações, acentuações, letra maiuscula e minuscula;",
+    "II-) Proibido desrespeitar qualquer militar, sendo subalterno ou superior;",
+    "III-) Utilize gramática: pontuações, acentuações, letra maiúscula e minúscula;",
     "IV-) É proibido abreviar as palavras (ex: blz, tmj...);",
-    "V-) Gírias que não sejam militares são proibidas (ex: suave, firmeza...);"
+    "V-) Gírias que não sejam militares são proibidas (ex: suave, firmeza...);",
     "VI-) A disciplina é obrigatória em nossa instituição;",
     "VII-) Apenas militares da patente Cabo+ podem comprar armamentos e sair da base;",
     "VIII-) Caso não cumpra com alguma punição solicitada, será exilado(a) imediatamente do Exército Brasileiro;",
     "IX-) Sempre utilize pronomes com os superiores (ex: Senhor ou Senhora);",
     "X-) Não é permitido perguntar ou pedir treinamentos e exames, caso contrário, será punido(a);",
-    "XI-) Não treine em locais que esteja ocorrendo treinamentos, exames ou instruções;",
+    "XI-) Não treine em locais que estejam ocorrendo treinamentos, exames ou instruções;",
     "XII-) É extremamente proibido perguntas pessoais, caso faça, será punido(a);",
     "XIII-) É obrigatório utilizar o fardamento correto. Caso seja 'VIP', poderá personalizar com um tema militar.",
     "Alguma dúvida?",
     "Comandos de resposta:",
-    "DIREI TA VOLVER ! - Você deve-se virar á sua direi ta;",
-    "ESQUER DS VOLVER ! - Você deve-se virar á sua esquer da;",
-    "RETA GUAR DA VOLVER ! - Você deve-se virar ao lado inverso de sua posição;",
-    "VAN GUAR DA VOLVER ! - Você deve-se virar á posição inicial em que estava.",
+    "DIREI TA VOLVER ! - Você deve-se virar à sua direita;",
+    "ESQUER DA VOLVER ! - Você deve-se virar à sua esquerda;",
+    "RETA GUAR DA VOLVER ! - Você deve-se virar ao lado inverso da sua posição;",
+    "VAN GUAR DA VOLVER ! - Você deve-se virar à posição inicial em que estava.",
     "Alguma dúvida?",
     "Formações:",
     "FORMAÇÃO ! - Você deverá ficar nesta linha cinza/branca, em posição ombro à ombro;",
@@ -315,15 +315,15 @@ local regrasLista = {
     "SENTIDO ! - Retire qualquer comando de mão e fique imóvel;",
     "PPF ! - Permissão para falar;",
     "PPA ! - Permissão para assistir ou auxiliar;",
-    "PPS ! - Permissão para s@ir.",
+    "PPS ! - Permissão para sair.",
     "Alguma dúvida?",
     "Comandos falsos:",
-    "Os comandos falsos são reconhecidos devido aos erros gramáticas ou letras em Falta.",
+    "Os comandos falsos são reconhecidos devido aos erros gramaticais ou letras em falta.",
     "ESQUERDA V0LVER !, FILA UNICA e assim vai...",
-    "Jumping Jacks / Polichinelos (JJ's):
-    "Os jumping jacks (jj’s), fazem parte de treinamentos e também podem ser aplicados em militares que cometem infrações;",
-    "Eles devem ser escritos utilizando caps-lock (letrra maiuscula) e "!" no final."
-    "Deverão ser realizados conforme a quantia solicitada pelo instrutor, e para ativa-los, basta apertar no botão em que se encontra um símbolo de polichinelo na parte superior."
+    "Jumping Jacks / Polichinelos (JJ's):",
+    "Os Jumping Jacks (JJ's) fazem parte de treinamentos e também podem ser aplicados em militares que cometem infrações;",
+    "Eles devem ser escritos utilizando CAPS LOCK e '!' no final.",
+    "Deverão ser realizados conforme a quantidade solicitada pelo instrutor, e para ativá-los, basta apertar no botão com o símbolo de polichinelo na parte superior.",
     "Exemplo:",
     "ZERO !",
     "UM !",
@@ -333,7 +333,7 @@ local regrasLista = {
     "Alguma dúvida?",
     "Capacitação de Patente (CDP):",
     "A capacitação de patente (CDP) é a meta necessária para um militar ser promovido, podendo ser em dias e também com suas funções.",
-    "Vale ressaltar que os militares qué possuem a passe 'VIP', têm a CDP reduzida e conseguem ser Promovidos mais rapidamente.",
+    "Vale ressaltar que os militares que possuem a passe 'VIP', têm a CDP reduzida e conseguem ser promovidos mais rapidamente.",
     "Alguma dúvida?"
 }
 
@@ -357,6 +357,8 @@ local function createRegrasGui()
     uICornerRegras.Parent = regrasGui
 
     local regrasList = Instance.new("ScrollingFrame")
+    regrasList.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    regrasList.CanvasSize = UDim2.new(0, 0, 0, 0)
     regrasList.Size = UDim2.new(1, -20, 1, -20)
     regrasList.Position = UDim2.new(0, 10, 0, 10)
     regrasList.BackgroundTransparency = 1
@@ -374,6 +376,9 @@ local function createRegrasGui()
         regraButton.Size = UDim2.new(1, -10, 0, 40)
         regraButton.BackgroundColor3 = Color3.fromRGB(0, 120, 0)
         regraButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        regraButton.TextScaled = true
+        regraButton.TextWrapped = true
+        regraButton.TextXAlignment = Enum.TextXAlignment.Left
         regraButton.Parent = regrasList
 
         local regraCorner = Instance.new("UICorner")
@@ -383,7 +388,7 @@ local function createRegrasGui()
         connectButton(regraButton, function()
             -- tenta enviar no chat global (protege com pcall caso não exista)
             local ok, err = pcall(function()
-                local chatEvents = ReplicatedStorage:WaitForChild("DefaultChatSystemChatEvents", 1)
+                local chatEvents = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
                 if chatEvents and chatEvents:FindFirstChild("SayMessageRequest") then
                     chatEvents.SayMessageRequest:FireServer(regra, "All")
                 end
@@ -402,8 +407,8 @@ local reportsGui
 local groupId = 387273307
 
 local function getRoleTag(plr)
-    local roleName = plr:GetRoleInGroup(groupId)
-    return "["..string.sub(roleName,1,1).."] "..roleName
+    local roleName = plr:GetRoleInGroup(groupId) or ""
+    return "["..(string.sub(roleName,1,1) or "").."] "..roleName
 end
 
 local function createReportsGui()
@@ -486,9 +491,9 @@ local function createReportsGui()
                                "* **Participantes & Pontuação:**\n"
 
             if scoresGui then
-                local playersList = scoresGui:FindFirstChildWhichIsA("ScrollingFrame")
-                if playersList then
-                    for _, item in ipairs(playersList:GetChildren()) do
+                local playersListFrame = scoresGui:FindFirstChildWhichIsA("ScrollingFrame")
+                if playersListFrame then
+                    for _, item in ipairs(playersListFrame:GetChildren()) do
                         if item:IsA("Frame") then
                             local labels = {}
                             for _, lbl in ipairs(item:GetChildren()) do
