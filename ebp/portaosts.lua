@@ -4,7 +4,7 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
 -- CONFIG
-local GROUP_ID = 123 -- coloque o ID do seu grupo
+local GROUP_ID = 387273307 -- coloque o ID do seu grupo
 local RANK_MIN = 7
 
 -- Objetos
