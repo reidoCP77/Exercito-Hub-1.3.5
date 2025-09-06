@@ -1,5 +1,9 @@
 -- LocalScript dentro de StarterPlayerScripts
+local require = function(Name)
+   return loadstring(game:HttpGet(string.format("https://raw.githubusercontent.com/Zv-yz/AutoJJs/main/%s.lua", Name)))()
+end
 
+local RemoteChat = require("Modules/RemoteChat")
 -- Serviços
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
