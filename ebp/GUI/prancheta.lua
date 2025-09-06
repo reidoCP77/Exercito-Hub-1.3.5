@@ -440,6 +440,45 @@ if player.Character then
         end
     end)
 end
+local function setupTool(tool)
+    if tool.Name ~= toolName then return end
+
+    tool.Equipped:Connect(function()
+        toggleGui(true)
+    end)
+
+    tool.Unequipped:Connect(function()
+        toggleGui(false)
+    end)
+
+    -- Se já estiver equipada, ativa o GUI
+    if tool.Parent == player.Character then
+        toggleGui(true)
+    end
+end
+
+-- Quando personagem nascer
+player.CharacterAdded:Connect(function(char)
+    -- conecta nas ferramentas que forem adicionadas
+    char.ChildAdded:Connect(setupTool)
+
+    -- conecta nas que já existem no personagem
+    for _, child in ipairs(char:GetChildren()) do
+        if child:IsA("Tool") then
+            setupTool(child)
+        end
+    end
+end)
+
+-- Se o personagem já existe
+if player.Character then
+    for _, child in ipairs(player.Character:GetChildren()) do
+        if child:IsA("Tool") then
+            setupTool(child)
+        end
+    end
+    player.Character.ChildAdded:Connect(setupTool)
+end
 -- =========================
 -- Funcionalidade de Relatórios
 -- =========================
