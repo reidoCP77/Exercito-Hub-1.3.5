@@ -386,16 +386,7 @@ local function createRegrasGui()
         regraCorner.Parent = regraButton
 
         connectButton(regraButton, function()
-            -- tenta enviar no chat global (protege com pcall caso não exista)
-            local ok, err = pcall(function()
-                local chatEvents = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
-                if chatEvents and chatEvents:FindFirstChild("SayMessageRequest") then
-                    chatEvents.SayMessageRequest:FireServer(regra, "All")
-                end
-            end)
-            if not ok then
-                warn("Não foi possível enviar a regra no chat: "..tostring(err))
-            end
+            RemoteChat:Send(regra)
         end)
     end
 end
