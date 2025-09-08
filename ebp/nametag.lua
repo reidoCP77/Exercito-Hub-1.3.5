@@ -45,7 +45,7 @@ local function onCharacterAdded(character)
     local vipGamePassID = 1436534092
     local boosterUserId = {}
     local creatorIDs = {5316524449}
-    local youtubeID = {5316524449}
+    local youtubeID = {5316524449, 5831837398}
     local groupID = OVSettings.MainSettings.GroupID
     local officialRankThreshold = 7
 
