@@ -1,74 +1,53 @@
-local idgroup = 387273307
-local Algema = game.ServerStorage.Algema
-local Fal = game.ServerStorage.FAL
-local M4A1 = game.ServerStorage.M4A1
-local Prancheta = game.ServerStorage.Prancheta
-local C = game.ServerStorage["[C] Continencia"]
-local D = game.ServerStorage["[D] Descançar"]
-local R = game.ServerStorage["[R] Render-se"]
-local Bastao = game.ServerStorage.Bastao
+local Players = game:GetService("Players")
+local ServerStorage = game:GetService("ServerStorage")
+local MarketplaceService = game:GetService("MarketplaceService")
 
-local Divisoes = {
-    "[BAC] Batalhão de Ações de Comandos",
-    "[BFE] Batalhão de Forças Especiais",
-    "[CIE] Centro de Inteligência do Exército",
-    "[BPE] Batalhão da Polícia do Exército"
-}
+local GROUP_ID = 387273307 
+local GAMEPASS_AK47 = 11111111
+local GAMEPASS_MOTO = 22222222 
 
-game.Players.PlayerAdded:Connect(function(Plr)
-    local function giveItems()
-        -- Itens baseados no rank
-        if Plr:GetRankInGroup(idgroup) >= 8 then
-            if not Plr.Backpack:FindFirstChild("Algema") then
-                Algema:Clone().Parent = Plr.Backpack
-            end
-            if not Plr.Backpack:FindFirstChild("FAL") then
-                Fal:Clone().Parent = Plr.Backpack
-            end
-            if not Plr.Backpack:FindFirstChild("M4A1") then
-                M4A1:Clone().Parent = Plr.Backpack
-            end
-            if not Plr.Backpack:FindFirstChild("Prancheta") then
-                Prancheta:Clone().Parent = Plr.Backpack
-            end
-        elseif Plr:GetRankInGroup(idgroup) >= 4 then
-            if not Plr.Backpack:FindFirstChild("FAL") then
-                Fal:Clone().Parent = Plr.Backpack
-            end
-            if not Plr.Backpack:FindFirstChild("M4A1") then
-                M4A1:Clone().Parent = Plr.Backpack
-            end
-            if not Plr.Backpack:FindFirstChild("Prancheta") then
-                Prancheta:Clone().Parent = Plr.Backpack
-            end
-        elseif Plr:GetRankInGroup(idgroup) >= 3 then
-            if not Plr.Backpack:FindFirstChild("FAL") then
-                Fal:Clone().Parent = Plr.Backpack
-            end
-        end
+local toolsFolder = ServerStorage:WaitForChild("Tools")
 
-        -- Itens para todos os jogadores
-        if not Plr.Backpack:FindFirstChild("[C] Continencia") then
-            C:Clone().Parent = Plr.Backpack
-        end
-        if not Plr.Backpack:FindFirstChild("[D] Descançar") then
-            D:Clone().Parent = Plr.Backpack
-        end
-        if not Plr.Backpack:FindFirstChild("[R] Render-se") then
-            R:Clone().Parent = Plr.Backpack
-        end
+-- give tool
 
-        -- Dar Bastão se o jogador estiver em alguma das divisões
-        for _, div in ipairs(Divisoes) do
-            if Plr.Team and Plr.Team.Name == div then
-                if not Plr.Backpack:FindFirstChild("Bastão") then
-                    Bastao:Clone().Parent = Plr.Backpack
-                end
-                break
-            end
-        end
-    end
+local function giveTool(player, toolName)
+	local tool = toolsFolder:FindFirstChild(toolName)
+	if tool then
+		local clone = tool:Clone()
+		clone.Parent = player.Backpack
+	end
+end
 
-    Plr.CharacterAdded:Connect(giveItems)
-    giveItems()
+Players.PlayerAdded:Connect(function(player)
+	player.CharacterAdded:Wait()
+	local rank = player:GetRankInGroup(GROUP_ID)
+
+	if rank >= 3 then
+		giveTool(player, "Tablet")
+		giveTool(player, "FAL")
+	end
+
+	if rank >= 8 then
+		giveTool(player, "Tablet")
+		giveTool(player, "FAL")
+		giveTool(player, "Algema")
+	end
+
+-- ak47 dourada
+
+	local success, ownsAK47 = pcall(function()
+		return MarketplaceService:UserOwnsGamePassAsync(player.UserId, GAMEPASS_AK47)
+	end)
+	if success and ownsAK47 then
+		giveTool(player, "AK-47 Dourada")
+	end
+
+	-- moto
+
+	local success2, ownsMoto = pcall(function()
+		return MarketplaceService:UserOwnsGamePassAsync(player.UserId, GAMEPASS_MOTO)
+	end)
+	if success2 and ownsMoto then
+		giveTool(player, "Moto")
+	end
 end)
