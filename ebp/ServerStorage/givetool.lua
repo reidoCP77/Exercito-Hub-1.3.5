@@ -51,3 +51,19 @@ Players.PlayerAdded:Connect(function(player)
 		giveTool(player, "Moto")
 	end
 end)
+
+-- bastão
+
+local function giveBastaoIfInTeam(player, teamList)
+    local playerTeam = player.Team
+    for _, teamName in ipairs(teamList) do
+        if playerTeam and playerTeam.Name == teamName then
+            local tool = ServerStorage:FindFirstChild("Tools"):FindFirstChild("Bastão")
+            if tool then
+                local clone = tool:Clone()
+                clone.Parent = player.Backpack
+            end
+            break
+        end
+    end
+end
