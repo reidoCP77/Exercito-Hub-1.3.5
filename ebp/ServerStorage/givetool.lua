@@ -6,6 +6,13 @@ local GROUP_ID = 387273307
 local GAMEPASS_AK47 = 11111111
 local GAMEPASS_MOTO = 22222222 
 
+local bastantes = {
+    "[BPE] Batalhão da Polícia do Exército",
+    "[BFE] Batalhão de Ações de Comandos",
+    "[BAC] Batalhão de Ações de Comandos",
+    "[CIE] Centro de Inteligência do Exército",
+}
+
 local toolsFolder = ServerStorage:WaitForChild("Tools")
 
 -- give tool
