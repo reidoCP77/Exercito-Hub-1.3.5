@@ -26,14 +26,13 @@ local OVSettings = {
     }
 }
 
--- Detecta dispositivo
 local function detectDevice()
-    if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled and not UserInputService.GamepadEnabled then
+    if UserInputService.VREnabled then
+        return "VR"
+    elseif UserInputService.TouchEnabled then
         return "Mobile"
     elseif UserInputService.GamepadEnabled then
         return "Console"
-    elseif UserInputService.VREnabled then
-        return "VR"
     else
         return "PC"
     end
@@ -43,7 +42,7 @@ local deviceDetected = detectDevice()
 
 -- Função quando o personagem spawnar
 local function onCharacterAdded(character)
-    local vipGamePassID = 1033598019
+    local vipGamePassID = 1451711664
     local boosterUserId = {}
     local creatorIDs = {5316524449}
     local youtubeID = {}
