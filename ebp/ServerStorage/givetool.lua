@@ -3,8 +3,8 @@ local ServerStorage = game:GetService("ServerStorage")
 local MarketplaceService = game:GetService("MarketplaceService")
 
 local GROUP_ID = 387273307 
-local GAMEPASS_AK47 = 11111111
-local GAMEPASS_MOTO = 22222222 
+local GAMEPASS_AK47 = 1451727546
+local GAMEPASS_MOTO = 1451711664 
 
 local bastaoTeams = {
     "[BPE] Batalhão da Polícia do Exército",
