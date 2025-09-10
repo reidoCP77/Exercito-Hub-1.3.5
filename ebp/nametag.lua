@@ -215,5 +215,6 @@ player.CharacterAdded:Connect(onCharacterAdded)
 
 if player.Character then
    player.Character:WaitForChild("Humanoid")
-   player.Character:WaitForChild("Head") onCharacterAdded(player.Character)
+   player.Character:WaitForChild("Head")
+   onCharacterAdded(player.Character)
 end
