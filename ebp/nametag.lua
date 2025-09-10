@@ -124,29 +124,46 @@ local function onCharacterAdded(character)
     end
 
     -- Cargo no grupo
-    if OVSettings.MainSettings.GroupRanks then
-        local textInstanceClone = script:WaitForChild("TextExample"):Clone()
-        textInstanceClone.Parent = billBoardGuiClone
-        textInstanceClone.Name = "GroupRank"
-        local defaultText = "[Civ] Civis"
-        local subunitRank = "N/A"
-        coroutine.wrap(function()
-            if player:IsInGroup(groupID) then
-                local role = player:GetRoleInGroup(groupID)
-                textInstanceClone.Text = role
-                for _, id in ipairs(OVSettings.MainSettings.Subunidade) do
-                    if player:IsInGroup(id) then
-                        subunitRank = player:GetRoleInGroup(id)
-                        break
-                    end
-                end
-                textInstanceClone.Text = textInstanceClone.Text .. " | " .. subunitRank
-            else
-                textInstanceClone.Text = defaultText
+    -- Cargo no grupo
+if OVSettings.MainSettings.GroupRanks then
+    local textInstanceClone = script:WaitForChild("TextExample"):Clone()
+    textInstanceClone.Parent = billBoardGuiClone
+    textInstanceClone.Name = "GroupRank"
+    local defaultText = "[CI] Cidadão"
+    local subunitRank = "N/A"
+
+    coroutine.wrap(function()
+        if player:IsInGroup(groupID) then
+            -- Nome do cargo
+            local role = player:GetRoleInGroup(groupID)
+
+            -- Corrige caso venha número bugado
+            if tonumber(role) ~= nil then
+                role = "[??] Cargo Desconhecido"
             end
-        end)()
-        applyTextSettings(textInstanceClone)
-    end
+
+            textInstanceClone.Text = role
+
+            -- Subunidade (se tiver)
+            for _, id in ipairs(OVSettings.MainSettings.Subunidade) do
+                if player:IsInGroup(id) then
+                    subunitRank = player:GetRoleInGroup(id)
+                    break
+                end
+            end
+
+            -- Junta cargo + subunidade
+            if subunitRank ~= "N/A" then
+                textInstanceClone.Text = textInstanceClone.Text .. " | " .. subunitRank
+            end
+        else
+            -- Não está no grupo
+            textInstanceClone.Text = defaultText
+        end
+    end)()
+
+    applyTextSettings(textInstanceClone)
+end
 
     -- Username/DisplayName
     if OVSettings.MainSettings.PlayerUsername then
