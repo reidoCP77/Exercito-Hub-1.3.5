@@ -211,8 +211,9 @@ end
     end
 end
 
--- Conectar ao spawn
 player.CharacterAdded:Connect(onCharacterAdded)
+
 if player.Character then
-    onCharacterAdded(player.Character)
+   player.Character:WaitForChild("Humanoid")
+   player.Character:WaitForChild("Head") onCharacterAdded(player.Character)
 end
