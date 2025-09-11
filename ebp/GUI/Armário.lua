@@ -259,7 +259,7 @@ end
 -- ================== EVENTOS BOTÕES ==================
 comprarButton.MouseButton1Click:Connect(function()
     if not acessorioSelecionado then return end
-    local money = player:FindFirstChild("leaderstats") and player.leaderstats:FindFirstChild("Money")
+    local money = player:FindFirstChild("leaderstats") and player.leaderstats:FindFirstChild("Dinheiro")
     if not money then return end
     local preco = acessorioSelecionado.Preco
     local id = acessorioSelecionado.Id
