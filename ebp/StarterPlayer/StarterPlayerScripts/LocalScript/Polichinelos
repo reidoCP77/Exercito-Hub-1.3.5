@@ -1,0 +1,107 @@
+-- LocalScript - Sistema de Polichinelos pelo Chat
+-- Coloque em StarterPlayerScripts
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+
+local polichMode = false
+local polichCount = 0
+
+-- ===== GUI com botão Polichinelos =====
+local gui = Instance.new("ScreenGui")
+gui.Name = "PolichinelosGUI"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local btn = Instance.new("TextButton")
+btn.Size = UDim2.new(0,180,0,40)
+btn.Position = UDim2.new(0.5, -90, 0, 10)
+btn.AnchorPoint = Vector2.new(0.5,0)
+btn.BackgroundColor3 = Color3.fromRGB(30,30,30)
+btn.TextColor3 = Color3.fromRGB(255,255,255)
+btn.Font = Enum.Font.SourceSansBold
+btn.TextSize = 20
+btn.Text = "Polichinelos: OFF"
+btn.Parent = gui
+
+btn.MouseButton1Click:Connect(function()
+	polichMode = not polichMode
+	btn.Text = "Polichinelos: " .. (polichMode and "ON" or "OFF")
+	btn.BackgroundColor3 = polichMode and Color3.fromRGB(50,200,100) or Color3.fromRGB(30,30,30)
+end)
+
+-- ===== Billboard contador =====
+local function ensureBillboard(char)
+	if not char then return end
+	local head = char:WaitForChild("Head")
+	local existing = head:FindFirstChild("PolichBillboard")
+	if existing then return existing end
+
+	local bb = Instance.new("BillboardGui")
+	bb.Name = "PolichBillboard"
+	bb.Size = UDim2.new(0,120,0,40)
+	bb.StudsOffset = Vector3.new(0,2.5,0)
+	bb.AlwaysOnTop = true
+	bb.Parent = head
+
+	local txt = Instance.new("TextLabel")
+	txt.Name = "Counter"
+	txt.Size = UDim2.new(1,0,1,0)
+	txt.BackgroundTransparency = 1
+	txt.Font = Enum.Font.SourceSansBold
+	txt.TextColor3 = Color3.fromRGB(0,255,0)
+	txt.TextStrokeTransparency = 0.3
+	txt.TextScaled = true
+	txt.Text = tostring(polichCount)
+	txt.Parent = bb
+
+	return bb
+end
+
+local function updateBillboard()
+	local char = player.Character
+	if not char then return end
+	local head = char:FindFirstChild("Head")
+	if not head then return end
+	local bb = head:FindFirstChild("PolichBillboard")
+	if bb and bb:FindFirstChild("Counter") then
+		bb.Counter.Text = tostring(polichCount)
+	end
+end
+
+-- ===== Animação de pulo =====
+local function doJump()
+	local char = player.Character
+	if not char then return end
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	if hum then
+		hum.Jump = true
+	end
+end
+
+-- ===== Quando mandar mensagem no chat =====
+player.Chatted:Connect(function(msg)
+	if not polichMode then return end
+
+	msg = msg:upper()
+	if msg == "UM !" or msg == "ZERO !" or msg:find("!") then
+		polichCount += 1
+		updateBillboard()
+		doJump()
+	end
+end)
+
+-- ===== Garantir billboard ao spawn =====
+player.CharacterAdded:Connect(function(char)
+	task.wait(1)
+	ensureBillboard(char)
+	updateBillboard()
+end)
+
+if player.Character then
+	ensureBillboard(player.Character)
+	updateBillboard()
+end
