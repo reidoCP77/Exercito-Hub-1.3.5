@@ -105,7 +105,7 @@ imageButton.MouseButton1Click:Connect(function()
     gpName.Size = UDim2.new(0, 180, 0, 25)
     gpName.Position = UDim2.new(0, 100, 0, 10)
     gpName.BackgroundTransparency = 1
-    gpName.Text = "Nome do Gamepass"
+    gpName.Text = "VIP"
     gpName.TextColor3 = Color3.fromRGB(255, 255, 255)
     gpName.Font = Enum.Font.SourceSansBold
     gpName.TextSize = 18
@@ -117,7 +117,7 @@ imageButton.MouseButton1Click:Connect(function()
     gpDesc.Size = UDim2.new(0, 180, 0, 40)
     gpDesc.Position = UDim2.new(0, 100, 0, 40)
     gpDesc.BackgroundTransparency = 1
-    gpDesc.Text = "Descrição do Gamepass aqui"
+    gpDesc.Text = "Tenha o nome colorido, acesso ao quartel e capacitação de patente reduzida, incluindo mais privilégios do Exército do New!"
     gpDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
     gpDesc.Font = Enum.Font.SourceSans
     gpDesc.TextSize = 14
@@ -130,7 +130,7 @@ imageButton.MouseButton1Click:Connect(function()
     gpPrice.Size = UDim2.new(0, 180, 0, 25)
     gpPrice.Position = UDim2.new(0, 100, 0, 85)
     gpPrice.BackgroundTransparency = 1
-    gpPrice.Text = "Preço: R$10"
+    gpPrice.Text = "R$ 60"
     gpPrice.TextColor3 = Color3.fromRGB(0, 255, 0)
     gpPrice.Font = Enum.Font.SourceSansBold
     gpPrice.TextSize = 16
