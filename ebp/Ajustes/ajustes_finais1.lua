@@ -462,17 +462,30 @@ local btnSom = criarOpcaoConfig("Remover som", 2)
 
 -- Exemplo: remover texturas (toggle)
 local texturasRemovidas = false
+local texturasGuardadas = {} -- guardar para restaurar depois
+
 btnTexturas.MouseButton1Click:Connect(function()
     if not texturasRemovidas then
+        -- remover e guardar
         for _, obj in ipairs(workspace:GetDescendants()) do
             if obj:IsA("Texture") or obj:IsA("Decal") then
-                obj.Parent = nil -- "guardar" removidos para restaurar
-                obj.Archivable = true
+                table.insert(texturasGuardadas, obj)
+                obj.Parent = nil
             end
         end
         btnTexturas.Text = "OK"
         btnTexturas.BackgroundColor3 = Color3.fromRGB(0,150,0)
         texturasRemovidas = true
+    else
+        -- restaurar
+        for _, obj in ipairs(texturasGuardadas) do
+            obj.Parent = workspace
+        end
+        texturasGuardadas = {}
+        btnTexturas.Text = "Ativar"
+        btnTexturas.BackgroundColor3 = Color3.fromRGB(0,200,0)
+        texturasRemovidas = false
+    end
 end)
 
 -- Exemplo: remover sombras (toggle)
@@ -497,8 +510,9 @@ btnSom.MouseButton1Click:Connect(function()
     if not somRemovido then
         for _, obj in ipairs(workspace:GetDescendants()) do
             if obj:IsA("Sound") then
-                obj.Playing = false
+                obj:SetAttribute("VolumeAntigo", obj.Volume) -- guardar volume
                 obj.Volume = 0
+                obj.Playing = false
             end
         end
         btnSom.Text = "OK"
@@ -507,7 +521,12 @@ btnSom.MouseButton1Click:Connect(function()
     else
         for _, obj in ipairs(workspace:GetDescendants()) do
             if obj:IsA("Sound") then
-                obj.Volume = 1
+                local antigo = obj:GetAttribute("VolumeAntigo")
+                if antigo then
+                    obj.Volume = antigo
+                else
+                    obj.Volume = 1
+                end
             end
         end
         btnSom.Text = "Ativar"
