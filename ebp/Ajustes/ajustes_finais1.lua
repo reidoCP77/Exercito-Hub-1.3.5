@@ -1,0 +1,247 @@
+-- LocalScript dentro de StarterGui
+ 
+local player = game.Players.LocalPlayer
+local MarketplaceService = game:GetService("MarketplaceService")
+
+-- Criar ScreenGui principal
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "MeuGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+ 
+-- =========================
+-- BOTÕES SUPERIORES
+-- =========================
+ 
+-- Função para criar botão superior
+local function criarBotaoSuperior(texto, posX)
+    local botao = Instance.new("TextButton")
+    botao.Size = UDim2.new(0, 120, 0, 40)
+    botao.Position = UDim2.new(0, posX, 0, -45)
+    botao.Text = texto
+    botao.TextColor3 = Color3.fromRGB(255,255,255)
+    botao.BackgroundColor3 = Color3.fromRGB(60,60,60)
+    botao.Parent = screenGui
+    botao.Font = Enum.Font.SourceSansBold
+    botao.TextSize = 18
+    botao.AutoButtonColor = true
+    botao.BackgroundTransparency = 0.2
+    botao.BorderSizePixel = 0
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)
+    corner.Parent = botao
+    
+    return botao
+end
+ 
+-- Criar botões
+local dinheiroBtn = criarBotaoSuperior("R$0", 200)
+local gamepassesBtn = criarBotaoSuperior("Gamepasses", 340)
+local configBtn = criarBotaoSuperior("Configurações", 470)
+ 
+-- =========================
+-- GUI CENTRAL (Gamepasses)
+-- =========================
+ 
+local gamepassesFrame = Instance.new("Frame")
+gamepassesFrame.Size = UDim2.new(0, 350, 0, 300)
+gamepassesFrame.Position = UDim2.new(0.5, -175, 0.5, -145) -- centralizado
+gamepassesFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+gamepassesFrame.BorderSizePixel = 4
+gamepassesFrame.BorderColor3 = Color3.fromRGB(0, 200, 0)
+gamepassesFrame.Visible = false -- começa invisível
+gamepassesFrame.Parent = screenGui
+ 
+-- Bordas arredondadas
+local gpCorner = Instance.new("UICorner")
+gpCorner.CornerRadius = UDim.new(0, 15)
+gpCorner.Parent = gamepassesFrame
+ 
+--- =========================
+-- Frame do setup
+-- =========================
+ 
+local configFrame= Instance.new("Frame")
+configFrame.Size = UDim2.new(0, 350, 0, 300)
+configFrame.Position = UDim2.new(0.5, -175, 0.5, -145) -- centralizado
+configFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+configFrame.BorderSizePixel = 4
+configFrame.BorderColor3 = Color3.fromRGB(0, 200, 0)
+configFrame.Visible = false -- começa invisível
+configFrame.Parent = screenGui
+ 
+-- button Frame Vip
+local imageButton = Instance.new("ImageButton")
+imageButton.Size = UDim2.new(0, 80, 0, 80)       -- tamanho do botão
+imageButton.Position = UDim2.new(0.5, -140, 0.5, -130) -- centralizado no Frame
+imageButton.BackgroundTransparency = 1             
+imageButton.Image = "rbxassetid://109447956060260"
+imageButton.Parent = gamepassesFrame
+ 
+imageButton.MouseButton1Click:Connect(function()
+    -- Criar retângulo principal para o Gamepass
+    local gpCard = Instance.new("Frame")
+    gpCard.Size = UDim2.new(0, 300, 0, 150)
+    gpCard.Position = UDim2.new(0, 20, 0, 100) -- posição dentro do gamepassesFrame
+    gpCard.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    gpCard.BorderSizePixel = 0
+    gpCard.Parent = gamepassesFrame
+    
+    local gpCardCorner = Instance.new("UICorner")
+    gpCardCorner.CornerRadius = UDim.new(0, 12)
+    gpCardCorner.Parent = gpCard
+    
+    -- Ícone da Gamepass
+    local gpIcon = Instance.new("ImageLabel")
+    gpIcon.Size = UDim2.new(0, 80, 0, 80)
+    gpIcon.Position = UDim2.new(0, 10, 0, 10)
+    gpIcon.BackgroundTransparency = 1
+    gpIcon.Image = "rbxassetid://109447956060260" -- seu ícone
+    gpIcon.Parent = gpCard
+    
+    -- Nome do Gamepass
+    local gpName = Instance.new("TextLabel")
+    gpName.Size = UDim2.new(0, 180, 0, 25)
+    gpName.Position = UDim2.new(0, 100, 0, 10)
+    gpName.BackgroundTransparency = 1
+    gpName.Text = "Nome do Gamepass"
+    gpName.TextColor3 = Color3.fromRGB(255, 255, 255)
+    gpName.Font = Enum.Font.SourceSansBold
+    gpName.TextSize = 18
+    gpName.TextXAlignment = Enum.TextXAlignment.Left
+    gpName.Parent = gpCard
+    
+    -- Descrição do Gamepass
+    local gpDesc = Instance.new("TextLabel")
+    gpDesc.Size = UDim2.new(0, 180, 0, 40)
+    gpDesc.Position = UDim2.new(0, 100, 0, 40)
+    gpDesc.BackgroundTransparency = 1
+    gpDesc.Text = "Descrição do Gamepass aqui"
+    gpDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
+    gpDesc.Font = Enum.Font.SourceSans
+    gpDesc.TextSize = 14
+    gpDesc.TextWrapped = true
+    gpDesc.TextXAlignment = Enum.TextXAlignment.Left
+    gpDesc.Parent = gpCard
+    
+    -- Preço do Gamepass
+    local gpPrice = Instance.new("TextLabel")
+    gpPrice.Size = UDim2.new(0, 180, 0, 25)
+    gpPrice.Position = UDim2.new(0, 100, 0, 85)
+    gpPrice.BackgroundTransparency = 1
+    gpPrice.Text = "Preço: R$10"
+    gpPrice.TextColor3 = Color3.fromRGB(0, 255, 0)
+    gpPrice.Font = Enum.Font.SourceSansBold
+    gpPrice.TextSize = 16
+    gpPrice.TextXAlignment = Enum.TextXAlignment.Left
+    gpPrice.Parent = gpCard
+    
+    -- Botão Comprar
+    local buyBtn = Instance.new("TextButton")
+    buyBtn.Size = UDim2.new(0, 80, 0, 30)
+    buyBtn.Position = UDim2.new(0, 200, 0, 110)
+    buyBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+    buyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    buyBtn.Text = "Comprar"
+    buyBtn.Font = Enum.Font.SourceSansBold
+    buyBtn.TextSize = 16
+    buyBtn.Parent = gpCard
+    
+    local buyCorner = Instance.new("UICorner")
+    buyCorner.CornerRadius = UDim.new(0, 8)
+    buyCorner.Parent = buyBtn
+    
+    -- Comprar Gamepass via MarketplaceService
+    buyBtn.MouseButton1Click:Connect(function()
+        local gamepassId = 1436534092 -- seu Gamepass ID
+        MarketplaceService:PromptPurchase(player, gamepassId)
+    end)
+end)
+-- BORDER RADIUS
+ 
+local gpCorner = Instance.new("UICorner")
+gpCorner.CornerRadius = UDim.new(0, 15)
+gpCorner.Parent = configFrame
+ 
+-- =========================
+-- Set up do Gamepass
+-- =========================
+ 
+gamepassesBtn.MouseButton1Click:Connect(function()
+    if gamepassesBtn.Text == "Gamepasses" then
+        gamepassesBtn.Text = "Fechar"
+        gamepassesBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 235)
+        gamepassesFrame.Visible = true
+    else
+        gamepassesBtn.Text = "Gamepasses"
+        gamepassesBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+        gamepassesFrame.Visible = false
+    end
+end)
+ 
+-- Setup do Config
+ 
+configBtn.MouseButton1Click:Connect(function()
+    if configBtn.Text == "Configurações" then
+        configBtn.Text = "Fechar"
+        configBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 235)
+        configFrame.Visible = true
+    else
+        configBtn.Text = "Configurações"
+        configBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
+        configFrame.Visible = false
+    end
+end)
+ 
+-- update do leaderstats
+local function atualizarDinheiro()
+    local leaderstats = player:FindFirstChild("leaderstats")
+    if leaderstats then
+        local dinheiro = leaderstats:FindFirstChild("Dinheiro")
+        if dinheiro then
+            dinheiroBtn.Text = "R$"..dinheiro.Value
+            dinheiro:GetPropertyChangedSignal("Value"):Connect(function()
+                dinheiroBtn.Text = "R$"..dinheiro.Value
+            end)
+        end
+    end
+end
+atualizarDinheiro()
+ 
+-- =========================
+-- BOTÃO CORRER (INFERIOR DIREITO)
+-- =========================
+ 
+local correrBtn = Instance.new("TextButton")
+correrBtn.Size = UDim2.new(0, 50, 0, 50)
+correrBtn.Position = UDim2.new(0,740, 0, 175) 
+correrBtn.Text = "Correr"
+correrBtn.TextColor3 = Color3.fromRGB(250,250,250)
+correrBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+correrBtn.Font = Enum.Font.SourceSansBold
+correrBtn.TextSize = 20
+correrBtn.AutoButtonColor = true
+correrBtn.Parent = screenGui
+correrBtn.BorderSizePixel = 4
+correrBtn.BackgroundTransparency = 0
+correrBtn.BorderColor3 = Color3.fromRGB(0, 200, 0)
+ 
+-- Arredondar bordas
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12)
+corner.Parent = correrBtn
+ 
+-- Função de clique do botão correr
+correrBtn.MouseButton1Click:Connect(function()
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    
+    if correrBtn.Text == "Correr" then
+        correrBtn.Text = "Andar"
+        humanoid.WalkSpeed = 27 -- velocidade ao "Correr"
+    else
+        correrBtn.Text = "Correr"
+        humanoid.WalkSpeed = 15 -- velocidade padrão
+    end
+end)
