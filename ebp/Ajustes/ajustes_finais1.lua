@@ -1,8 +1,9 @@
--- LocalScript dentro de StarterGui
+-- LocalScript -> StarterGui
 
 local player = game.Players.LocalPlayer
 local MarketplaceService = game:GetService("MarketplaceService")
- 
+local UserInputService = game:GetService("UserInputService")
+
 -- Criar ScreenGui principal
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "MeuGUI"
@@ -534,3 +535,21 @@ btnSom.MouseButton1Click:Connect(function()
         somRemovido = false
     end
 end)
+
+local function ajustarLayout()
+    if UserInputService.GamepadEnabled then
+        -- 🎮 Console
+        correrBtn.Position = UDim2.new(0.5, -25, 1, -80) -- centralizado inferior
+        dinheiroBtn.Position = UDim2.new(0.5, -60, 0, 10) -- superior central
+        gamepassesBtn.Position = UDim2.new(0.5, -60, 0, 60)
+        configBtn.Position = UDim2.new(0.5, -60, 0, 110)
+    else
+        correrBtn.Position = UDim2.new(0, 740, 0, 175) 
+        dinheiroBtn.Position = UDim2.new(0, 200, 0, -45)
+        gamepassesBtn.Position = UDim2.new(0, 340, 0, -45)
+        configBtn.Position = UDim2.new(0, 470, 0, -45)
+    end
+end
+
+ajustarLayout()
+UserInputService.LastInputTypeChanged:Connect(ajustarLayout)
