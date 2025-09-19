@@ -1,19 +1,19 @@
 -- LocalScript -> StarterGui
-
+ 
 local player = game.Players.LocalPlayer
 local MarketplaceService = game:GetService("MarketplaceService")
 local UserInputService = game:GetService("UserInputService")
-
+ 
 -- Criar ScreenGui principal
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "MeuGUI"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
-
+ 
 -- =========================
 -- BOTÕES SUPERIORES
 -- =========================
-
+ 
 -- Função para criar botão superior
 local function criarBotaoSuperior(texto, posX)
     local botao = Instance.new("TextButton")
@@ -35,16 +35,16 @@ local function criarBotaoSuperior(texto, posX)
     
     return botao
 end
-
+ 
 -- Criar botões
 local dinheiroBtn = criarBotaoSuperior("R$0", 200)
 local gamepassesBtn = criarBotaoSuperior("Gamepasses", 340)
 local configBtn = criarBotaoSuperior("Configurações", 470)
-
+ 
 -- =========================
 -- GUI CENTRAL (Gamepasses)
 -- =========================
-
+ 
 local gamepassesFrame = Instance.new("Frame")
 gamepassesFrame.Size = UDim2.new(0, 350, 0, 300)
 gamepassesFrame.Position = UDim2.new(0.5, -175, 0.5, -145) -- centralizado
@@ -53,16 +53,16 @@ gamepassesFrame.BorderSizePixel = 4
 gamepassesFrame.BorderColor3 = Color3.fromRGB(0, 200, 0)
 gamepassesFrame.Visible = false -- começa invisível
 gamepassesFrame.Parent = screenGui
-
+ 
 -- Bordas arredondadas
 local gpCorner = Instance.new("UICorner")
 gpCorner.CornerRadius = UDim.new(0, 15)
 gpCorner.Parent = gamepassesFrame
-
+ 
 --- =========================
 -- Frame do setup
 -- =========================
-
+ 
 local configFrame= Instance.new("Frame")
 configFrame.Size = UDim2.new(0, 350, 0, 300)
 configFrame.Position = UDim2.new(0.5, -175, 0.5, -145) -- centralizado
@@ -71,7 +71,7 @@ configFrame.BorderSizePixel = 4
 configFrame.BorderColor3 = Color3.fromRGB(0, 200, 0)
 configFrame.Visible = false -- começa invisível
 configFrame.Parent = screenGui
-
+ 
 -- button Frame Vip
 local imageButton = Instance.new("ImageButton")
 imageButton.Size = UDim2.new(0, 80, 0, 80)       -- tamanho do botão
@@ -79,7 +79,7 @@ imageButton.Position = UDim2.new(0.5, -140, 0.5, -130) -- centralizado no Frame
 imageButton.BackgroundTransparency = 1             
 imageButton.Image = "rbxassetid://109447956060260"
 imageButton.Parent = gamepassesFrame
-
+ 
 imageButton.MouseButton1Click:Connect(function()
     -- Criar retângulo principal para o Gamepass
     local gpCard = Instance.new("Frame")
@@ -246,7 +246,7 @@ akButton.MouseButton1Click:Connect(function()
     end)
 end)
 -- BORDER RADIUS
-
+ 
 local gpCorner = Instance.new("UICorner")
 gpCorner.CornerRadius = UDim.new(0, 15)
 gpCorner.Parent = configFrame
@@ -339,7 +339,7 @@ end)
 -- =========================
 -- Set up do Gamepass
 -- =========================
-
+ 
 gamepassesBtn.MouseButton1Click:Connect(function()
     if gamepassesBtn.Text == "Gamepasses" then
         gamepassesBtn.Text = "Fechar"
@@ -351,9 +351,9 @@ gamepassesBtn.MouseButton1Click:Connect(function()
         gamepassesFrame.Visible = false
     end
 end)
-
+ 
 -- Setup do Config
-
+ 
 configBtn.MouseButton1Click:Connect(function()
     if configBtn.Text == "Configurações" then
         configBtn.Text = "Fechar"
@@ -365,7 +365,7 @@ configBtn.MouseButton1Click:Connect(function()
         configFrame.Visible = false
     end
 end)
-
+ 
 -- update do leaderstats
 local function atualizarDinheiro()
     local leaderstats = player:FindFirstChild("leaderstats")
@@ -380,11 +380,11 @@ local function atualizarDinheiro()
     end
 end
 atualizarDinheiro()
-
+ 
 -- =========================
 -- BOTÃO CORRER (INFERIOR DIREITO)
 -- =========================
-
+ 
 local correrBtn = Instance.new("TextButton")
 correrBtn.Size = UDim2.new(0, 50, 0, 50)
 correrBtn.Position = UDim2.new(0,740, 0, 175) 
@@ -398,12 +398,12 @@ correrBtn.Parent = screenGui
 correrBtn.BorderSizePixel = 4
 correrBtn.BackgroundTransparency = 0
 correrBtn.BorderColor3 = Color3.fromRGB(0, 200, 0)
-
+ 
 -- Arredondar bordas
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 12)
 corner.Parent = correrBtn
-
+ 
 -- Função de clique do botão correr
 correrBtn.MouseButton1Click:Connect(function()
     local character = player.Character or player.CharacterAdded:Wait()
@@ -420,7 +420,7 @@ end)
 -- =========================
 -- CONFIGURAÇÕES: Textos + Botões
 -- =========================
-
+ 
 -- Função para criar uma linha de configuração
 local function criarOpcaoConfig(nome, ordem)
     local label = Instance.new("TextLabel")
@@ -433,7 +433,7 @@ local function criarOpcaoConfig(nome, ordem)
     label.TextSize = 16
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.Parent = configFrame
-
+    
     -- Botão ao lado
     local botao = Instance.new("TextButton")
     botao.Size = UDim2.new(0, 80, 0, 30)
@@ -444,27 +444,27 @@ local function criarOpcaoConfig(nome, ordem)
     botao.Font = Enum.Font.SourceSansBold
     botao.TextSize = 14
     botao.Parent = configFrame
-
+    
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 8)
     corner.Parent = botao
-
+    
     return botao
 end
-
+ 
 -- Criar as 3 opções
 local btnTexturas = criarOpcaoConfig("Remover texturas", 0)
 local btnSombras = criarOpcaoConfig("Remover sombras", 1)
 local btnSom = criarOpcaoConfig("Remover som", 2)
-
+ 
 -- =========================
 -- Ações dos botões
 -- =========================
-
+ 
 -- Exemplo: remover texturas (toggle)
 local texturasRemovidas = false
 local texturasGuardadas = {} -- guardar para restaurar depois
-
+ 
 btnTexturas.MouseButton1Click:Connect(function()
     if not texturasRemovidas then
         -- remover e guardar
@@ -488,7 +488,7 @@ btnTexturas.MouseButton1Click:Connect(function()
         texturasRemovidas = false
     end
 end)
-
+ 
 -- Exemplo: remover sombras (toggle)
 local sombrasRemovidas = false
 btnSombras.MouseButton1Click:Connect(function()
@@ -504,7 +504,7 @@ btnSombras.MouseButton1Click:Connect(function()
         sombrasRemovidas = false
     end
 end)
-
+ 
 -- Exemplo: remover sons (toggle)
 local somRemovido = false
 btnSom.MouseButton1Click:Connect(function()
@@ -535,21 +535,27 @@ btnSom.MouseButton1Click:Connect(function()
         somRemovido = false
     end
 end)
-
+ 
 local function ajustarLayout()
-    if UserInputService.GamepadEnabled then
-        -- 🎮 Console
-        correrBtn.Position = UDim2.new(0.5, -25, 1, -80) -- centralizado inferior
-        dinheiroBtn.Position = UDim2.new(0.5, -60, 0, 10) -- superior central
-        gamepassesBtn.Position = UDim2.new(0.5, -60, 0, 60)
-        configBtn.Position = UDim2.new(0.5, -60, 0, 110)
+    if UserInputService.GamepadEnabled or UserInputService.KeyboardEnabled then
+        -- 🎮 Console ou 💻 PC
+        
+        -- Botões superiores alinhados lado a lado
+        dinheiroBtn.Position = UDim2.new(0, 870, 0, -20)
+        gamepassesBtn.Position = UDim2.new(0, 1000, 0, -20)
+        configBtn.Position = UDim2.new(0, 1130, 0, -20)
+        
+        -- Botão correr: meio do Y, final da tela (lado direito)
+        correrBtn.Position = UDim2.new(1, -70, 0.5, -25) 
+        
     else
+        -- 📱 Mobile (já configurado antes, não muda)
         correrBtn.Position = UDim2.new(0, 740, 0, 175) 
         dinheiroBtn.Position = UDim2.new(0, 200, 0, -45)
         gamepassesBtn.Position = UDim2.new(0, 340, 0, -45)
         configBtn.Position = UDim2.new(0, 470, 0, -45)
     end
 end
-
+ 
 ajustarLayout()
 UserInputService.LastInputTypeChanged:Connect(ajustarLayout)
