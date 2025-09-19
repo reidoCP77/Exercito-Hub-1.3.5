@@ -13,10 +13,7 @@ local BLUR_SIZE_OFF = 0
 local TWEEN_TIME = 0.3
 
 local DEVELOPER_NAMES = {
- "Creator, Mingal_amargo3",
- "Builder/Scripter, GabrielBStar2",
- "Builder/Scripter, NewCmlepo2024",
- "Builder, Felipe2101778",
+ "Creator, GabrielBStar2"
 }
 
 local blur = Lighting:FindFirstChild("MenuBlurEffect")
